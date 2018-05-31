@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage Title="Song Info" xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="mp3TaggerMusic.EditSongPropPage">
+
+    <ScrollView HorizontalOptions="Fill" Padding="20,5,20,5">
+        <StackLayout x:Name="stacklayout">
+
+            <StackLayout Orientation="Horizontal" Padding="0" Spacing="6" HorizontalOptions="CenterAndExpand">
+                <Image x:Name="imgCoverArt" Source="coverart.png"/>
+            </StackLayout>
+            
+            <StackLayout Orientation="Horizontal" Padding="0" Spacing="6" HorizontalOptions="EndAndExpand">
+                <Button x:Name="btnAutoComplete" Image="autocomplete.png" BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" />
+            </StackLayout>
+            
+            <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">
+                <Label Text="Song Title"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
+                <Image Source="musicnote.png" />
+                <Entry x:Name="txtSongTitle" Text="The Theft" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">
+                <Label Text="Artist"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
+                <Image Source="artist.png" />
+                <Entry x:Name="txtArtist" Text="Atreyu" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">
+                <Label Text="Album"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
+                <Image Source="album.png" />
+                <Entry x:Name="txtAlbum" Text="A Death Grip On Yesterday" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">
+                <Label Text="Track No."/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
+                <Image Source="number.png" />
+                <Entry x:Name="txtTrackNo" Text="4" Placeholder="1" Keyboard="Numeric" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">
+                <Label Text="Year"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
+                <Image Source="year.png" />
+                <Entry x:Name="txtYear" Text="2003" Placeholder="2002" Keyboard="Numeric" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">
+                <Label Text="Genre"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
+                <Image Source="genre.png" />
+                <Entry x:Name="txtGenre" Text="MetalCore, Rock" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
+                <Button x:Name="btnSave" Text="Save" HorizontalOptions="FillAndExpand" Clicked="btnSave_Clicked" />
+                <Button x:Name="btnCancel" Text="Cancel" HorizontalOptions="FillAndExpand" />
+            </StackLayout>
+
+
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="mp3TaggerMusic.FileListPage">
+
+    <!--ItemTapped="listView_ItemTapped"
+              ItemSelected="listView_ItemSelected"
+              IsPullToRefreshEnabled="True"
+              Refreshing="listView_Refreshing"-->
+    <StackLayout>
+        <Button x:Name="btnFileSel" Clicked="btnFileSel_Clicked" Text="Selecionar Archivo"></Button>
+        <ListView x:Name="lvFiles" SeparatorVisibility="Default" SeparatorColor="Blue">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding NameFile}" Detail="{Binding Path}"/>
+                    <!--<ImageCell Text="{Binding Name}" Detail="{Binding Status}" ImageSource="{Binding Image}"/>-->
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+    </StackLayout>
+</ContentPage>
