@@ -3,3 +3,22 @@ Mp3Tagger:
         ☐ Donde se ve la imagen de la caraturla hacer que cuando le den click te mande a buscar alguna imagen por si uno quiere ponerle su propia caratula
         ☐ Validar que sean imagenes los que se busquen cuando se haga lo de arriba
         ☐ Validar que solo sean archivos de musica a modificar los datos
+
+
+
+
+
+
+
+
+
+
+COMO HACER COMMIT EN GIT:
+    There is a lot easier way to do this that doesn't even require you to do anything outside Visual Studio.
+    
+    Open your project in Visual Studio
+    File> Add to source control
+    Open Team Explorer, click on Home button, proceed to "Sync" and there you'd find the "Publish to GitHub". Click on "Get Started"
+    Type title of your repository and description (optionally).
+    Click on "Publish"
+    That's all. Visual Studio github plugin automatically created repository for you and configured everything. Now just click on Home and choose "Changes" tab and finally commit your first commit.
