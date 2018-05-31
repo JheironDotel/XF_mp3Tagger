@@ -114,17 +114,17 @@ namespace mp3TaggerMusic
 
                     tagFile.Save();
 
-                    if (tags.Pictures.Count() > 0)
-                    {
-                        var cover = tags.Pictures.FirstOrDefault().Data.Data;
-                        System.IO.Stream coverStream = new System.IO.MemoryStream(cover);
+                    //if (tags.Pictures.Count() > 0)
+                    //{
+                    //    var cover = tags.Pictures.FirstOrDefault().Data.Data;
+                    //    System.IO.Stream coverStream = new System.IO.MemoryStream(cover);
 
-                        imgCoverArt.Source = ImageSource.FromStream(() => coverStream);
-                    }
-                    else
-                    {
-                        imgCoverArt.Source = ImageSource.FromResource("coverart.png");
-                    }
+                    //    imgCoverArt.Source = ImageSource.FromStream(() => coverStream);
+                    //}
+                    //else
+                    //{
+                    //    imgCoverArt.Source = ImageSource.FromResource("coverart.png");
+                    //}
                 }
             }
             catch (Exception ex)
