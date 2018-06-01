@@ -38,6 +38,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomCode\Utility.cs" />
     <Compile Include="CustomCode\MethodsExtension.cs" />
     <Compile Include="EditSongPropPage.xaml.cs">
       <DependentUpon>EditSongPropPage.xaml</DependentUpon>

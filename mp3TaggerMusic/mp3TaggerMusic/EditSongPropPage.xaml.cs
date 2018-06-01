@@ -17,6 +17,8 @@ namespace mp3TaggerMusic
     public partial class EditSongPropPage : ContentPage
     {
         private FileData _pickedFile;
+        private int tapCount = 0;
+        private bool changedCover = false;
 
         public EditSongPropPage(FileData pickedFile)
         {
@@ -102,6 +104,7 @@ namespace mp3TaggerMusic
                             realGenres = sp;
                         }
                     }
+                                      
 
                     tagFile.Tag.Title = txtSongTitle.Text;
                     tagFile.Tag.Performers = realArtist;
@@ -110,6 +113,10 @@ namespace mp3TaggerMusic
                     tagFile.Tag.Track = txtTrackNo.Text.ToUInt();
                     tagFile.Tag.Year = txtYear.Text.ToUInt();
                     tagFile.Tag.Genres = realGenres;
+
+                    if (changedCover) {
+                        //tagFile.Tag.Pictures = new[] { new TagLib.Picture(m) };
+                    }
 
 
                     tagFile.Save();
@@ -130,6 +137,45 @@ namespace mp3TaggerMusic
             catch (Exception ex)
             {
 
+            }
+        }
+
+        async void OnDobleTapSearchImage(object sender, EventArgs args)
+        {
+            try
+            {
+                tapCount++;
+                var imageSender = (Image)sender;
+                if (tapCount % 2 == 0)
+                {
+                    var pickedFileImg = await Plugin.FilePicker.CrossFilePicker.Current.PickFile();
+
+                    if (pickedFileImg == null)
+                    {
+                        await DisplayAlert("Archivo Imagen", "Debe seleccionar un archivo de imagen", "Ok");
+                        return;
+                    }
+
+                    var fExtension = System.IO.Path.GetExtension(pickedFileImg.FileName);
+                    if (Utility.imgExtensionList.Contains(fExtension))
+                    {
+                        byte[] fileData = pickedFileImg.DataArray;
+                        System.IO.Stream coverStream = new System.IO.MemoryStream(fileData);
+
+                        imageSender.Source = ImageSource.FromStream(() => coverStream);
+                        changedCover = true;
+                    }
+                    else
+                    {
+                        string msj = string.Format("Los tipos de imagenes aceptadas son: {0}", string.Join(", ", Utility.imgExtensionList));
+                        await DisplayAlert("Archivo Imagen", msj, "Ok");
+                        return;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
 

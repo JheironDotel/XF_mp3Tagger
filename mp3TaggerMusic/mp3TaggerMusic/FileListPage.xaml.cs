@@ -78,7 +78,7 @@ namespace mp3TaggerMusic
 
             if (pickedFile == null)
             {
-                await DisplayAlert("Seleccionar Archivo", "Debe seleccionar un archivo", "Ok");
+                await DisplayAlert("Archivo Audio", "Debe seleccionar un archivo de audio", "Ok");
                 return;
             }
 

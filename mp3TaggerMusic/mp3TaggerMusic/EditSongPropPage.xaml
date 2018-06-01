@@ -6,14 +6,21 @@
     <ScrollView HorizontalOptions="Fill" Padding="20,5,20,5">
         <StackLayout x:Name="stacklayout">
 
-            <StackLayout Orientation="Horizontal" Padding="0" Spacing="6" HorizontalOptions="CenterAndExpand">
-                <Image x:Name="imgCoverArt" Source="coverart.png"/>
+            <StackLayout Orientation="Horizontal" Padding="0" Spacing="6">
+                <Image x:Name="imgCoverArt" Source="coverart.png"  HorizontalOptions="CenterAndExpand" Aspect="AspectFit" 
+                       WidthRequest="210" HeightRequest="210">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer
+                Tapped="OnDobleTapSearchImage"
+                NumberOfTapsRequired="2" />
+                    </Image.GestureRecognizers>
+                </Image>
             </StackLayout>
-            
+
             <StackLayout Orientation="Horizontal" Padding="0" Spacing="6" HorizontalOptions="EndAndExpand">
                 <Button x:Name="btnAutoComplete" Image="autocomplete.png" BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" />
             </StackLayout>
-            
+
             <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">
                 <Label Text="Song Title"/>
             </StackLayout>
