@@ -76,8 +76,7 @@
             </StackLayout>
 
             <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
-                <Button x:Name="btnSave" Text="Save" HorizontalOptions="FillAndExpand" Clicked="btnSave_Clicked" />
-                <Button x:Name="btnCancel" Text="Cancel" HorizontalOptions="FillAndExpand" />
+                <Button x:Name="btnSave" Text="Save" HorizontalOptions="FillAndExpand" Clicked="btnSave_Clicked" />                
             </StackLayout>
 
 

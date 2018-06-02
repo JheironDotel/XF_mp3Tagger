@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using System.IO;
 
 namespace mp3TaggerMusic
 {
@@ -19,6 +20,7 @@ namespace mp3TaggerMusic
         private FileData _pickedFile;
         private int tapCount = 0;
         private bool changedCover = false;
+        private byte[] changedCoverImg;
 
         public EditSongPropPage(FileData pickedFile)
         {
@@ -35,7 +37,7 @@ namespace mp3TaggerMusic
                 var name = pickedFile.FileName;
                 //var path =pickedFile.FilePath;
                 byte[] fileData = pickedFile.DataArray;
-                System.IO.Stream stream = new System.IO.MemoryStream(fileData);
+                Stream stream = new MemoryStream(fileData);
 
                 var tagFile = TagLib.File.Create(new TagLib.StreamFileAbstraction(name, stream, stream));
                 var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2);
@@ -54,7 +56,7 @@ namespace mp3TaggerMusic
                     if (tags.Pictures.Count() > 0)
                     {
                         var cover = tags.Pictures.FirstOrDefault().Data.Data;
-                        System.IO.Stream coverStream = new System.IO.MemoryStream(cover);
+                        Stream coverStream = new MemoryStream(cover);
 
                         imgCoverArt.Source = ImageSource.FromStream(() => coverStream);
                     }
@@ -77,12 +79,18 @@ namespace mp3TaggerMusic
                 var name = _pickedFile.FileName;
                 //var path =pickedFile.FilePath;
                 byte[] fileData = _pickedFile.DataArray;
-                System.IO.Stream stream = new System.IO.MemoryStream(fileData);
+                Stream streamR = new MemoryStream(fileData);
+                Stream streamW = new MemoryStream(fileData);
 
-                var tagFile = TagLib.File.Create(new TagLib.StreamFileAbstraction(name, stream, stream));
 
-                if (tagFile != null)
+                //var stm = new MemoryStream();
+                //var writer = new BinaryWriter(stm);
+                //writer.Write(fileData);
+
+                using (var tagFile = TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW),TagLib.ReadStyle.None))
                 {
+                    var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2,true);
+
                     string[] realArtist = new string[] { };
                     string[] realGenres = new string[] { };
                     if (!string.IsNullOrEmpty(txtArtist.Text))
@@ -104,7 +112,6 @@ namespace mp3TaggerMusic
                             realGenres = sp;
                         }
                     }
-                                      
 
                     tagFile.Tag.Title = txtSongTitle.Text;
                     tagFile.Tag.Performers = realArtist;
@@ -114,25 +121,21 @@ namespace mp3TaggerMusic
                     tagFile.Tag.Year = txtYear.Text.ToUInt();
                     tagFile.Tag.Genres = realGenres;
 
-                    if (changedCover) {
-                        //tagFile.Tag.Pictures = new[] { new TagLib.Picture(m) };
+                    if (changedCover)
+                    {
+                        Stream coverStream = new MemoryStream(changedCoverImg);
+                        var tagCover = new TagLib.StreamFileAbstraction("hola", coverStream, coverStream);
+                        tagFile.Tag.Pictures = new[] { new TagLib.Picture(tagCover) };
                     }
-
-
                     tagFile.Save();
-
-                    //if (tags.Pictures.Count() > 0)
-                    //{
-                    //    var cover = tags.Pictures.FirstOrDefault().Data.Data;
-                    //    System.IO.Stream coverStream = new System.IO.MemoryStream(cover);
-
-                    //    imgCoverArt.Source = ImageSource.FromStream(() => coverStream);
-                    //}
-                    //else
-                    //{
-                    //    imgCoverArt.Source = ImageSource.FromResource("coverart.png");
-                    //}
+                    tagFile.Dispose();
+                    streamW.Dispose();
                 }
+                //stm.Position = 0;
+                //using (var reader = new BinaryReader(stm))
+                //{
+                //    reader.ReadBytes((int)stm.Length);
+                //}
             }
             catch (Exception ex)
             {
@@ -153,28 +156,33 @@ namespace mp3TaggerMusic
                     if (pickedFileImg == null)
                     {
                         await DisplayAlert("Archivo Imagen", "Debe seleccionar un archivo de imagen", "Ok");
+                        tapCount = 0;
                         return;
                     }
 
-                    var fExtension = System.IO.Path.GetExtension(pickedFileImg.FileName);
+                    var fExtension = Path.GetExtension(pickedFileImg.FileName);
                     if (Utility.imgExtensionList.Contains(fExtension))
                     {
                         byte[] fileData = pickedFileImg.DataArray;
-                        System.IO.Stream coverStream = new System.IO.MemoryStream(fileData);
+                        Stream coverStream = new MemoryStream(fileData);
 
                         imageSender.Source = ImageSource.FromStream(() => coverStream);
                         changedCover = true;
+                        changedCoverImg = fileData;
+                        tapCount = 0;
                     }
                     else
                     {
                         string msj = string.Format("Los tipos de imagenes aceptadas son: {0}", string.Join(", ", Utility.imgExtensionList));
                         await DisplayAlert("Archivo Imagen", msj, "Ok");
+                        tapCount = 0;
                         return;
                     }
                 }
             }
             catch (Exception)
             {
+                tapCount = 0;
                 throw;
             }
         }
@@ -194,7 +202,7 @@ namespace mp3TaggerMusic
 
                 //open file if exists
                 IFile file = await folder.GetFileAsync("Atreyu_-_The_Theft.mp3");
-                //using (System.IO.Stream stream = await file.OpenAsync(FileAccess.ReadAndWrite))
+                //using (Stream stream = await file.OpenAsync(FileAccess.ReadAndWrite))
                 //{
                 //    long length = stream.Length;
                 //    BackgroundModel.Image = new byte[length];
@@ -211,7 +219,7 @@ namespace mp3TaggerMusic
         {
             get
             {
-                return "";//System.IO.Path.Combine((string)Android.OS.Environment.ExternalStorageDirectory, "FolderPath");
+                return "";//Path.Combine((string)Android.OS.Environment.ExternalStorageDirectory, "FolderPath");
             }
         }
     }

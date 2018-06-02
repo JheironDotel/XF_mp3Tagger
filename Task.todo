@@ -1,8 +1,10 @@
 Mp3Tagger:
     Task:
-        ☐ Donde se ve la imagen de la caraturla hacer que cuando le den click te mande a buscar alguna imagen por si uno quiere ponerle su propia caratula
-        ☐ Validar que sean imagenes los que se busquen cuando se haga lo de arriba
-        ☐ Validar que solo sean archivos de musica a modificar los datos
+        ✔ Donde se ve la imagen de la caraturla hacer que cuando le den click te mande a buscar alguna imagen por si uno quiere ponerle su propia caratula @done (2018-6-2 10:44:32)
+        ✔ Validar que sean imagenes los que se busquen cuando se haga lo de arriba @done (2018-6-2 10:44:35)
+        ✔ Validar que solo sean archivos de musica a modificar los datos @done (2018-6-2 10:44:37)
+        ☐ poner el boton de guardar como un boton flotante
+        
 
 
 
