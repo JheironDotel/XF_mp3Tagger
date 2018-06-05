@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="mp3TaggerMusic.SettingsPage">
+    <ScrollView HorizontalOptions="Fill" Padding="20,5,20,5">
+        <StackLayout x:Name="stacklayoutSett">
+
+            <StackLayout Orientation="Horizontal" Padding="0" Spacing="6" HorizontalOptions="EndAndExpand">
+                <Label Text="Solo completar la información faltante de la cancion" x:Name="lblSwitch"/>
+                <Switch IsToggled="True" Toggled="Switch_Toggled" x:Name="switchInfoMissing"></Switch>
+            </StackLayout>
+
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

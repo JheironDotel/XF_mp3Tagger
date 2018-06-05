@@ -19,11 +19,7 @@ namespace mp3TaggerMusic
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FileListPage : ContentPage
-    {
-        private HttpClient _client = new HttpClient();
-
-        private string lastfmApiKey = "9b1e45575aa97afc4f34665f46148cc5";
-        private string lastfmUrl = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key={0}&artist={1}&track={2}&format=json";
+    {        
         private List<FilesData> getFlies(string path = "")
         {
             List<FilesData> fdl = new List<FilesData>();
@@ -82,8 +78,17 @@ namespace mp3TaggerMusic
                 return;
             }
 
-           await Navigation.PushAsync(new EditSongPropPage(pickedFile));
+            await Navigation.PushAsync(new EditSongPropPage(pickedFile));
+        }
 
+        private async void ToolbarItem_Activated(object sender, EventArgs e)
+        {
+            ToolbarItem tbi = (ToolbarItem)sender;
+            if (tbi.Text == "Settings")
+            {
+                var page = new SettingsPage();
+                await Navigation.PushAsync(page);
+            }
         }
     }
 }

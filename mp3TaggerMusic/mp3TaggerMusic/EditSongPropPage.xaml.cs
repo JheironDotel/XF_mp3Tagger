@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using System.IO;
+using mp3TaggerMusic.Models;
 
 namespace mp3TaggerMusic
 {
@@ -22,7 +23,7 @@ namespace mp3TaggerMusic
         private bool changedCover = false;
         private byte[] changedCoverImg;
 
-        public EditSongPropPage(FileData pickedFile)
+        public EditSongPropPage(FileData pickedFile = null)
         {
             InitializeComponent();
 
@@ -87,9 +88,9 @@ namespace mp3TaggerMusic
                 //var writer = new BinaryWriter(stm);
                 //writer.Write(fileData);
 
-                using (var tagFile = TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW),TagLib.ReadStyle.None))
+                using (var tagFile = TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW), TagLib.ReadStyle.None))
                 {
-                    var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2,true);
+                    var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2, true);
 
                     string[] realArtist = new string[] { };
                     string[] realGenres = new string[] { };
@@ -187,6 +188,43 @@ namespace mp3TaggerMusic
             }
         }
 
+        private async void btnAutoComplete_Clicked(object sender, EventArgs e)
+        {
+            var app = Application.Current as App;
+            bool _onlyCompleteMissingInfo = app.OnlyCompleteMissingInfo;
+            SongInfoClass.SongObject result = null;
+
+            if (_onlyCompleteMissingInfo)
+            {
+                //Solo actualizo los campos vacios
+
+                if (!string.IsNullOrEmpty(txtSongTitle.Text) && !string.IsNullOrEmpty(txtArtist.Text))
+                {
+                    result = await Utility.getSongDataInfo(txtSongTitle.Text, txtArtist.Text);
+                }
+                else if (!string.IsNullOrEmpty(txtSongTitle.Text))
+                {
+                    result = await Utility.getSongDataInfo(txtSongTitle.Text);
+                }
+                else if (!string.IsNullOrEmpty(txtArtist.Text))
+                {
+                    result = await Utility.getSongDataInfo(txtArtist.Text);
+                }
+
+            }
+            else
+            {
+                //Actualizo toda la informaciones
+            }
+
+            if (result != null)
+            {
+
+            }
+        }
+
+
+
         /*
          
                 //open root folder
@@ -212,9 +250,6 @@ namespace mp3TaggerMusic
              
              
          */
-
-
-
         public static string Directorypath
         {
             get

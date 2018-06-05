@@ -10,6 +10,21 @@ namespace mp3TaggerMusic
 {
     public partial class App : Application
     {
+        private string OnlyCompleteMissingInfoKey = "true";
+
+        public bool OnlyCompleteMissingInfo
+        {
+            get
+            {
+                if (Properties.ContainsKey(OnlyCompleteMissingInfoKey))
+                {
+                    return Convert.ToBoolean(Properties[OnlyCompleteMissingInfoKey]);
+                }
+                return true;
+            }
+            set { Properties[OnlyCompleteMissingInfoKey] = value; }
+        }
+
         public App()
         {
             InitializeComponent();
@@ -33,5 +48,5 @@ namespace mp3TaggerMusic
         }
     }
 
-   
+
 }
