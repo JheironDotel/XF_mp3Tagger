@@ -38,6 +38,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BasePage.cs" />
     <Compile Include="CustomCode\Utility.cs" />
     <Compile Include="CustomCode\MethodsExtension.cs" />
     <Compile Include="EditSongPropPage.xaml.cs">
@@ -47,6 +48,7 @@
       <DependentUpon>FileListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Intefaces\IPathService.cs" />
+    <Compile Include="Intefaces\IProgressInterface.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

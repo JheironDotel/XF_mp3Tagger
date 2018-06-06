@@ -1,9 +1,11 @@
-﻿using mp3TaggerMusic.Models;
+﻿using mp3TaggerMusic.Intefaces;
+using mp3TaggerMusic.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace mp3TaggerMusic.CustomCode
 {
@@ -63,6 +65,17 @@ namespace mp3TaggerMusic.CustomCode
                 //_posts = new ObservableCollection<Post>(posts);
                 //postsListView.ItemsSource = _posts;
             }
+        }
+
+        
+        public static void Show()
+        {
+            DependencyService.Get<IProgressInterface>().Show();
+        }
+
+        public static void Hide()
+        {
+            DependencyService.Get<IProgressInterface>().Hide();
         }
     }
 

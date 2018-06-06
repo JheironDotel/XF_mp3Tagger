@@ -190,36 +190,47 @@ namespace mp3TaggerMusic
 
         private async void btnAutoComplete_Clicked(object sender, EventArgs e)
         {
-            var app = Application.Current as App;
-            bool _onlyCompleteMissingInfo = app.OnlyCompleteMissingInfo;
-            SongInfoClass.SongObject result = null;
-
-            if (_onlyCompleteMissingInfo)
+            try
             {
-                //Solo actualizo los campos vacios
+                Utility.Show();
 
-                if (!string.IsNullOrEmpty(txtSongTitle.Text) && !string.IsNullOrEmpty(txtArtist.Text))
+                var app = Application.Current as App;
+                bool _onlyCompleteMissingInfo = app.OnlyCompleteMissingInfo;
+                SongInfoClass.SongObject result = null;
+
+                if (_onlyCompleteMissingInfo)
                 {
-                    result = await Utility.getSongDataInfo(txtSongTitle.Text, txtArtist.Text);
+                    //Solo actualizo los campos vacios
+
+                    if (!string.IsNullOrEmpty(txtSongTitle.Text) && !string.IsNullOrEmpty(txtArtist.Text))
+                    {
+                        result = await Utility.getSongDataInfo(txtSongTitle.Text, txtArtist.Text);
+                    }
+                    else if (!string.IsNullOrEmpty(txtSongTitle.Text))
+                    {
+                        result = await Utility.getSongDataInfo(txtSongTitle.Text);
+                    }
+                    else if (!string.IsNullOrEmpty(txtArtist.Text))
+                    {
+                        result = await Utility.getSongDataInfo(txtArtist.Text);
+                    }
+
                 }
-                else if (!string.IsNullOrEmpty(txtSongTitle.Text))
+                else
                 {
-                    result = await Utility.getSongDataInfo(txtSongTitle.Text);
-                }
-                else if (!string.IsNullOrEmpty(txtArtist.Text))
-                {
-                    result = await Utility.getSongDataInfo(txtArtist.Text);
+                    //Actualizo toda la informaciones
                 }
 
+                if (result != null)
+                {
+                    Utility.Hide();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                //Actualizo toda la informaciones
-            }
+                Utility.Hide();
 
-            if (result != null)
-            {
-
+                throw;
             }
         }
 

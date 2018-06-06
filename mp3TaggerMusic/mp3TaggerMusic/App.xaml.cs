@@ -1,4 +1,5 @@
-﻿using System;
+﻿using mp3TaggerMusic.Intefaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,8 @@ namespace mp3TaggerMusic
         {
             InitializeComponent();
 
+            DependencyService.Register<IProgressInterface>();
+            
             MainPage = new NavigationPage(new FileListPage());
         }
 
