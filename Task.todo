@@ -7,6 +7,7 @@ Mp3Tagger:
         ✔ poner el menu de settin y agregar propiedad que guarde si la paersona quiere reemplazar toda la informacion o solo poner la informacion que esta vacia @done (2018-6-5 10:35:03)
         ☐ poner un loading cuando se este buscando la informacion de X cancion
             https://www.youtube.com/watch?v=k0VNjuhhE-w
+        ☐ poner el api key en un .config y excluir ese archivo del commit
         
 
 
