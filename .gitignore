@@ -242,5 +242,3 @@ ModelManifest.xml
 .fake/
 
 
-# AppKey
-appSettings.config.xml
