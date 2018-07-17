@@ -196,23 +196,24 @@ namespace mp3TaggerMusic
 
                 var app = Application.Current as App;
                 bool _onlyCompleteMissingInfo = app.OnlyCompleteMissingInfo;
-                SongInfoClass.SongObject result = null;
+                SongInfoAudioDB.SongObject result = null;
 
                 if (_onlyCompleteMissingInfo)
                 {
                     //Solo actualizo los campos vacios
-
-                    if (!string.IsNullOrEmpty(txtSongTitle.Text) && !string.IsNullOrEmpty(txtArtist.Text))
+                    //TENGO QUE HACER LA LOGICA PARA REEMPLAZAR LOS CARACTERES QUE PUEDA TENER EL NOMBRE DE
+                    //LA CANCION Y EL ARTISTA
+                    if (!string.IsNullOrEmpty(txtSongTitle.Text.Replace(" ","_")) && !string.IsNullOrEmpty(txtArtist.Text))
                     {
-                        result = await Utility.getSongDataInfo(txtSongTitle.Text, txtArtist.Text);
+                        result = await Utility.getSongDataInfo_AudioDB(txtSongTitle.Text.Replace(" ", "_"), txtArtist.Text);
                     }
-                    else if (!string.IsNullOrEmpty(txtSongTitle.Text))
+                    else if (!string.IsNullOrEmpty(txtSongTitle.Text.Replace(" ", "_")))
                     {
-                        result = await Utility.getSongDataInfo(txtSongTitle.Text);
+                        result = await Utility.getSongDataInfo_AudioDB(txtSongTitle.Text.Replace(" ", "_"));
                     }
                     else if (!string.IsNullOrEmpty(txtArtist.Text))
                     {
-                        result = await Utility.getSongDataInfo(txtArtist.Text);
+                        result = await Utility.getSongDataInfo_AudioDB(txtArtist.Text);
                     }
 
                 }
@@ -221,9 +222,19 @@ namespace mp3TaggerMusic
                     //Actualizo toda la informaciones
                 }
 
-                if (result != null)
+                if (result != null && result.track != null)
+                {
+                    txtArtist.Text = result.track.FirstOrDefault().strArtist;
+                    txtAlbum.Text = result.track.FirstOrDefault().strAlbum;
+                    txtGenre.Text = result.track.FirstOrDefault().strGenre;
+
+
+                    Utility.Hide();
+                }
+                else
                 {
                     Utility.Hide();
+                    await DisplayAlert("No Encontrado", "Informacion no encontrada.", "Ok");
                 }
             }
             catch (Exception ex)

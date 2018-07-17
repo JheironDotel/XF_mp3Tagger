@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http.Headers;
+using mp3TaggerMusic.CustomCode;
 
 namespace mp3TaggerMusic
 {
@@ -78,7 +79,11 @@ namespace mp3TaggerMusic
                 return;
             }
 
+            Utility.Show();
+
             await Navigation.PushAsync(new EditSongPropPage(pickedFile));
+
+            Utility.Hide();
         }
 
         private async void ToolbarItem_Activated(object sender, EventArgs e)

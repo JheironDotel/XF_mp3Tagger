@@ -21,7 +21,7 @@ namespace mp3TaggerMusic.Droid
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             Xamarin.Forms.DependencyService.Register<mp3TaggerMusic.Intefaces.IPathService>();
-            Xamarin.Forms.DependencyService.Register<mp3TaggerMusic.Intefaces.IProgressInterface>();
+            //Xamarin.Forms.DependencyService.Register<mp3TaggerMusic.Intefaces.IProgressInterface>();
             LoadApplication(new App());
         }
     }
