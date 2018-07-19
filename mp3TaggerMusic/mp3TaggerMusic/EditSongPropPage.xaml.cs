@@ -60,7 +60,7 @@ namespace mp3TaggerMusic
                 //streamW.Write(fileData, 0, fileData.Length);
 
 
-                IFolder folder = await FileSystem.Current.GetFolderFromPathAsync(path);//PROBANDO OTRA VEZ
+                IFolder folder = await FileSystem.Current.GetFolderFromPathAsync(path);//
 
                 var file = await folder.GetFileAsync(name);
 
