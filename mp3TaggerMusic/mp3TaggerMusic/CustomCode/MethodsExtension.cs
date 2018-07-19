@@ -184,5 +184,15 @@ namespace mp3TaggerMusic.CustomCode
                 return 0;
             }
         }
+
+        public static string FullTrimText(this string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                return value.TrimStart().TrimEnd();
+            }
+
+            return value;
+        }
     }
 }

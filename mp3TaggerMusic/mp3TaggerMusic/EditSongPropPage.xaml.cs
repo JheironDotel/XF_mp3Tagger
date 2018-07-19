@@ -24,7 +24,8 @@ namespace mp3TaggerMusic
         private byte[] changedCoverImg;
 
         private Stream streamR;
-        private Stream streamW;
+        private string picketFileName;
+        private string picketFilePath;
 
         public EditSongPropPage(FileData pickedFile = null)
         {
@@ -38,10 +39,10 @@ namespace mp3TaggerMusic
         {
             try
             {
-                var name = pickedFile.FileName;
-                var path = pickedFile.FilePath;
+                picketFileName = pickedFile.FileName;
+                picketFilePath = pickedFile.FilePath;
 
-                var fExtension = Path.GetExtension(name);
+                var fExtension = Path.GetExtension(picketFileName);
                 if (!Utility.AudioExtensionList.Contains(fExtension))
                 {
                     string msj = string.Format("Los tipos de archivos de audio aceptados son: {0}", string.Join(", ", Utility.AudioExtensionList));
@@ -49,41 +50,30 @@ namespace mp3TaggerMusic
                     return;
                 }
 
-                //var path =pickedFile.FilePath;
+
                 byte[] fileData = pickedFile.DataArray;
-                //Stream stream = new MemoryStream(fileData);
 
                 streamR = new MemoryStream();
-                //streamR.Write(fileData, 0, fileData.Length);
 
-                //streamW = new MemoryStream();
-                //streamW.Write(fileData, 0, fileData.Length);
+                var folder = await FileSystem.Current.GetFileFromPathAsync(picketFilePath);
 
-
-                IFolder folder = await FileSystem.Current.GetFolderFromPathAsync(path);//
-
-                var file = await folder.GetFileAsync(name);
-
-                //var task = file.OpenAsync(FileAccess.ReadAndWrite);
-                //streamR = task.Result;
-
-                streamR = await file.OpenAsync(FileAccess.ReadAndWrite);
+                streamR = await folder.OpenAsync(FileAccess.ReadAndWrite);
 
                 TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
 
                 var tagFile = //TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW));
-                    TagLib.File.Create(new FileAbstraction(name, streamR));
+                    TagLib.File.Create(new FileAbstraction(picketFileName, streamR));
                 var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2);
 
                 if (tags != null)
                 {
                     var realArtist = tags.AlbumArtists.Count() > 0 ? tags.AlbumArtists : tags.Performers;
 
-                    txtSongTitle.Text = tags.Title;
+                    txtSongTitle.Text = !string.IsNullOrEmpty(tags.Title) ? tags.Title : txtSongTitle.Text;
                     txtArtist.Text = string.Join(", ", realArtist);
-                    txtAlbum.Text = tags.Album;
-                    txtTrackNo.Text = tags.Track.ToString();
-                    txtYear.Text = tags.Year.ToString();
+                    txtAlbum.Text = !string.IsNullOrEmpty(tags.Album) ? tags.Album : txtAlbum.Text;
+                    txtTrackNo.Text = !string.IsNullOrEmpty(tags.Track.ToString()) ? tags.Track.ToString() : txtTrackNo.Text;
+                    txtYear.Text = !string.IsNullOrEmpty(tags.Year.ToString()) ? tags.Year.ToString() : txtYear.Text;
                     txtGenre.Text = string.Join(", ", tags.Genres);
 
                     if (tags.Pictures.Count() > 0)
@@ -110,31 +100,19 @@ namespace mp3TaggerMusic
         {
             try
             {
-                var name = _pickedFile.FileName;
-                //var path = _pickedFile.FilePath;
                 byte[] fileData = _pickedFile.DataArray;
-                //Stream streamR = new MemoryStream(fileData);
-                //Stream streamW = new MemoryStream(fileData);
-
-                //MemoryStream streamR = new MemoryStream();
-                //streamR.Write(fileData, 0, fileData.Length);
-
-                //MemoryStream streamW = new MemoryStream();
-                //streamW.Write(fileData, 0, fileData.Length);
 
                 TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
 
-                using (var tagFile = TagLib.File.Create(new FileAbstraction(name, streamR)/*TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW)*/))
+                using (var tagFile = TagLib.File.Create(new FileAbstraction(picketFileName, streamR)/*TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW)*/))
                 {
-                    //tagFile.RemoveTags(TagLib.TagTypes.Id3v1 | TagLib.TagTypes.Id3v2);
-
-                    var tags = tagFile.Tag;//tagFile.GetTag(TagLib.TagTypes.Id3v2, true);
+                    var tags = tagFile.Tag;
 
                     string[] realArtist = new string[] { };
                     string[] realGenres = new string[] { };
                     if (!string.IsNullOrEmpty(txtArtist.Text))
                     {
-                        var sp = txtArtist.Text.Split(',');
+                        var sp = txtArtist.Text.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                         if (sp.Count() > 0)
                         {
@@ -144,7 +122,7 @@ namespace mp3TaggerMusic
 
                     if (!string.IsNullOrEmpty(txtGenre.Text))
                     {
-                        var sp = txtGenre.Text.Split(',');
+                        var sp = txtGenre.Text.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                         if (sp.Count() > 0)
                         {
@@ -152,30 +130,26 @@ namespace mp3TaggerMusic
                         }
                     }
 
-                    //tagFile.Tag.Title = txtSongTitle.Text;
-                    tags.Title = txtSongTitle.Text;
-                    //tagFile.Tag.Performers = realArtist;
-                    //tagFile.Tag.AlbumArtists = realArtist;
-                    //tagFile.Tag.Album = txtAlbum.Text;
-                    //tagFile.Tag.Track = txtTrackNo.Text.ToUInt();
-                    //tagFile.Tag.Year = txtYear.Text.ToUInt();
-                    //tagFile.Tag.Genres = realGenres;
+
+                    tags.Title = txtSongTitle.Text.FullTrimText();
+                    tags.Performers = realArtist;
+                    tags.AlbumArtists = realArtist;
+                    tags.Album = txtAlbum.Text.FullTrimText();
+                    tags.Track = txtTrackNo.Text.ToUInt();
+                    tags.Year = txtYear.Text.ToUInt();
+                    tags.Genres = realGenres;
 
                     if (changedCover)
                     {
                         Stream coverStream = new MemoryStream(changedCoverImg);
                         var tagCover = new TagLib.StreamFileAbstraction("hola", coverStream, coverStream);
                         tagFile.Tag.Pictures = new[] { new TagLib.Picture(tagCover) };
+                        coverStream.Dispose();
                     }
                     tagFile.Save();
                     tagFile.Dispose();
-                    streamW.Dispose();
+                    streamR.Dispose();
                 }
-                //stm.Position = 0;
-                //using (var reader = new BinaryReader(stm))
-                //{
-                //    reader.ReadBytes((int)stm.Length);
-                //}
             }
             catch (Exception ex)
             {
