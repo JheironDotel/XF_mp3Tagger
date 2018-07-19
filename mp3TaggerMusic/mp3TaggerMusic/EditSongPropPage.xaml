@@ -27,7 +27,7 @@
 
             <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
                 <Image Source="musicnote.png" />
-                <Entry x:Name="txtSongTitle" Text="The Theft" HorizontalOptions="FillAndExpand"/>
+                <Entry x:Name="txtSongTitle" Text="Song Title" HorizontalOptions="FillAndExpand"/>
             </StackLayout>
 
             <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">
@@ -36,7 +36,7 @@
 
             <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
                 <Image Source="artist.png" />
-                <Entry x:Name="txtArtist" Text="Atreyu" HorizontalOptions="FillAndExpand"/>
+                <Entry x:Name="txtArtist" Text="Artist" HorizontalOptions="FillAndExpand"/>
             </StackLayout>
 
             <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">
@@ -45,7 +45,7 @@
 
             <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
                 <Image Source="album.png" />
-                <Entry x:Name="txtAlbum" Text="A Death Grip On Yesterday" HorizontalOptions="FillAndExpand"/>
+                <Entry x:Name="txtAlbum" Text="Album" HorizontalOptions="FillAndExpand"/>
             </StackLayout>
 
             <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">
@@ -54,7 +54,7 @@
 
             <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
                 <Image Source="number.png" />
-                <Entry x:Name="txtTrackNo" Text="4" Placeholder="1" Keyboard="Numeric" HorizontalOptions="FillAndExpand"/>
+                <Entry x:Name="txtTrackNo" Text="-1" Placeholder="1" Keyboard="Numeric" HorizontalOptions="FillAndExpand"/>
             </StackLayout>
 
             <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">
@@ -63,7 +63,7 @@
 
             <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
                 <Image Source="year.png" />
-                <Entry x:Name="txtYear" Text="2003" Placeholder="2002" Keyboard="Numeric" HorizontalOptions="FillAndExpand"/>
+                <Entry x:Name="txtYear" Text="-2000" Placeholder="2002" Keyboard="Numeric" HorizontalOptions="FillAndExpand"/>
             </StackLayout>
 
             <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">
@@ -72,7 +72,7 @@
 
             <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
                 <Image Source="genre.png" />
-                <Entry x:Name="txtGenre" Text="MetalCore, Rock" HorizontalOptions="FillAndExpand"/>
+                <Entry x:Name="txtGenre" Text="Genre" HorizontalOptions="FillAndExpand"/>
             </StackLayout>
 
             <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">

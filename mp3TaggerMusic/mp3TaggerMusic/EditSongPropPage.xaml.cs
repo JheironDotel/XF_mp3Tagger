@@ -23,6 +23,9 @@ namespace mp3TaggerMusic
         private bool changedCover = false;
         private byte[] changedCoverImg;
 
+        private Stream streamR;
+        private Stream streamW;
+
         public EditSongPropPage(FileData pickedFile = null)
         {
             InitializeComponent();
@@ -36,11 +39,40 @@ namespace mp3TaggerMusic
             try
             {
                 var name = pickedFile.FileName;
+                var path = pickedFile.FilePath;
+
+                var fExtension = Path.GetExtension(name);
+                if (!Utility.AudioExtensionList.Contains(fExtension))
+                {
+                    string msj = string.Format("Los tipos de archivos de audio aceptados son: {0}", string.Join(", ", Utility.AudioExtensionList));
+                    await DisplayAlert("Archivo Audio", msj, "Ok");
+                    return;
+                }
+
                 //var path =pickedFile.FilePath;
                 byte[] fileData = pickedFile.DataArray;
-                Stream stream = new MemoryStream(fileData);
+                //Stream stream = new MemoryStream(fileData);
 
-                var tagFile = TagLib.File.Create(new TagLib.StreamFileAbstraction(name, stream, stream));
+                streamR = new MemoryStream();
+                //streamR.Write(fileData, 0, fileData.Length);
+
+                //streamW = new MemoryStream();
+                //streamW.Write(fileData, 0, fileData.Length);
+
+
+                IFolder folder = await FileSystem.Current.GetFolderFromPathAsync(path);
+
+                var file = await folder.GetFileAsync(name);
+
+                var task = file.OpenAsync(FileAccess.ReadAndWrite);
+                //streamR = task.Result;
+
+                streamR = await file.OpenAsync(FileAccess.ReadAndWrite);
+
+                TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+
+                var tagFile = //TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW));
+                    TagLib.File.Create(new FileAbstraction(name, streamR));
                 var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2);
 
                 if (tags != null)
@@ -69,7 +101,8 @@ namespace mp3TaggerMusic
             }
             catch (Exception ex)
             {
-
+                string msj = string.Format("Ha ocurrido un error: {0}", ex);
+                await DisplayAlert("Error", msj, "Ok");
             }
         }
 
@@ -78,19 +111,24 @@ namespace mp3TaggerMusic
             try
             {
                 var name = _pickedFile.FileName;
-                //var path =pickedFile.FilePath;
+                //var path = _pickedFile.FilePath;
                 byte[] fileData = _pickedFile.DataArray;
-                Stream streamR = new MemoryStream(fileData);
-                Stream streamW = new MemoryStream(fileData);
+                //Stream streamR = new MemoryStream(fileData);
+                //Stream streamW = new MemoryStream(fileData);
 
+                //MemoryStream streamR = new MemoryStream();
+                //streamR.Write(fileData, 0, fileData.Length);
 
-                //var stm = new MemoryStream();
-                //var writer = new BinaryWriter(stm);
-                //writer.Write(fileData);
+                //MemoryStream streamW = new MemoryStream();
+                //streamW.Write(fileData, 0, fileData.Length);
 
-                using (var tagFile = TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW), TagLib.ReadStyle.None))
+                TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+
+                using (var tagFile = TagLib.File.Create(new FileAbstraction(name, streamR)/*TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW)*/))
                 {
-                    var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2, true);
+                    //tagFile.RemoveTags(TagLib.TagTypes.Id3v1 | TagLib.TagTypes.Id3v2);
+
+                    var tags = tagFile.Tag;//tagFile.GetTag(TagLib.TagTypes.Id3v2, true);
 
                     string[] realArtist = new string[] { };
                     string[] realGenres = new string[] { };
@@ -114,13 +152,14 @@ namespace mp3TaggerMusic
                         }
                     }
 
-                    tagFile.Tag.Title = txtSongTitle.Text;
-                    tagFile.Tag.Performers = realArtist;
-                    tagFile.Tag.AlbumArtists = realArtist;
-                    tagFile.Tag.Album = txtAlbum.Text;
-                    tagFile.Tag.Track = txtTrackNo.Text.ToUInt();
-                    tagFile.Tag.Year = txtYear.Text.ToUInt();
-                    tagFile.Tag.Genres = realGenres;
+                    //tagFile.Tag.Title = txtSongTitle.Text;
+                    tags.Title = txtSongTitle.Text;
+                    //tagFile.Tag.Performers = realArtist;
+                    //tagFile.Tag.AlbumArtists = realArtist;
+                    //tagFile.Tag.Album = txtAlbum.Text;
+                    //tagFile.Tag.Track = txtTrackNo.Text.ToUInt();
+                    //tagFile.Tag.Year = txtYear.Text.ToUInt();
+                    //tagFile.Tag.Genres = realGenres;
 
                     if (changedCover)
                     {
@@ -140,7 +179,8 @@ namespace mp3TaggerMusic
             }
             catch (Exception ex)
             {
-
+                string msj = string.Format("Ha ocurrido un error: {0}", ex);
+                DisplayAlert("Error", msj, "Ok");
             }
         }
 
@@ -203,7 +243,7 @@ namespace mp3TaggerMusic
                     //Solo actualizo los campos vacios
                     //TENGO QUE HACER LA LOGICA PARA REEMPLAZAR LOS CARACTERES QUE PUEDA TENER EL NOMBRE DE
                     //LA CANCION Y EL ARTISTA
-                    if (!string.IsNullOrEmpty(txtSongTitle.Text.Replace(" ","_")) && !string.IsNullOrEmpty(txtArtist.Text))
+                    if (!string.IsNullOrEmpty(txtSongTitle.Text.Replace(" ", "_")) && !string.IsNullOrEmpty(txtArtist.Text))
                     {
                         result = await Utility.getSongDataInfo_AudioDB(txtSongTitle.Text.Replace(" ", "_"), txtArtist.Text);
                     }

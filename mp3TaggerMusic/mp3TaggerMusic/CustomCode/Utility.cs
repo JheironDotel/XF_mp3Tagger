@@ -18,7 +18,7 @@ namespace mp3TaggerMusic.CustomCode
         public static string audioDbApiKey = "195068";
         //public static string lastfmUrl = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key={0}&artist={1}&track={2}&format=json";
         public static string lastfmUrl = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key={0}&{1}{2}&format=json";
-        public static string audioDbUrl = "http://www.theaudiodb.com/api/v1/json/{0}/searchtrack.php?s={1}{2}";
+        public static string audioDbUrl = "http://www.theaudiodb.com/api/v1/json/{0}/searchtrack.php?{1}{2}";
 
 
         public static string[] imgExtensionList = new[]
