@@ -64,7 +64,7 @@ namespace mp3TaggerMusic
 
                 var file = await folder.GetFileAsync(name);
 
-                var task = file.OpenAsync(FileAccess.ReadAndWrite);
+                //var task = file.OpenAsync(FileAccess.ReadAndWrite);
                 //streamR = task.Result;
 
                 streamR = await file.OpenAsync(FileAccess.ReadAndWrite);
