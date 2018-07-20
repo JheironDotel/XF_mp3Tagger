@@ -10,7 +10,10 @@
               IsPullToRefreshEnabled="True"
               Refreshing="listView_Refreshing"-->
     <StackLayout>
-        <Button x:Name="btnFileSel" Clicked="btnFileSel_Clicked" Text="Selecionar Archivo"></Button>
+        <Button x:Name="btnFileSel" Clicked="btnFileSel_Clicked" Text="Selecionar Archivo de Audio"></Button>
+        <Button x:Name="btnFileSelPath" Clicked="btnFileSelPath_Clicked" Text="Selecionar Ubicacion Archivos de Audio"></Button>
+        
+        
         <ListView x:Name="lvFiles" SeparatorVisibility="Default" SeparatorColor="Blue">
             <ListView.ItemTemplate>
                 <DataTemplate>

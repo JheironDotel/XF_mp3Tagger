@@ -15,15 +15,21 @@ using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http.Headers;
 using mp3TaggerMusic.CustomCode;
+using PCLStorage;
 
 namespace mp3TaggerMusic
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FileListPage : ContentPage
     {        
-        private List<FilesData> getFlies(string path = "")
+        private async Task<List<FilesData>> getFilesOnPath(string path = "")
         {
             List<FilesData> fdl = new List<FilesData>();
+
+
+            var folder = await FileSystem.Current.GetFolderFromPathAsync(path);
+            var allfiles = folder.GetFilesAsync();
+
             var f = new FilesData() { NameFile = "Prueba", Extension = ".mp3", Path = "c/wndows/a" };
             fdl.Add(f);
 
@@ -94,6 +100,25 @@ namespace mp3TaggerMusic
                 var page = new SettingsPage();
                 await Navigation.PushAsync(page);
             }
+        }
+
+        private async void btnFileSelPath_Clicked(object sender, EventArgs e)
+        {
+            await DisplayAlert("Informacion", "Debe seleccionar un archivo de audio para asi obtener todos los archivos de audio compatibles de dicha ubicacion", "Ok");
+
+            var pickedFile = await CrossFilePicker.Current.PickFile();
+
+            if (pickedFile == null)
+            {
+                await DisplayAlert("Archivo Audio", "Debe seleccionar un archivo de audio", "Ok");
+                return;
+            }
+
+            Utility.Show();
+
+            await getFilesOnPath(pickedFile.FilePath);
+
+            Utility.Hide();
         }
     }
 }
