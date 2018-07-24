@@ -48,6 +48,7 @@
     <Compile Include="FileListPage.xaml.cs">
       <DependentUpon>FileListPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Intefaces\IConnectivityChecker.cs" />
     <Compile Include="Intefaces\IFileList.cs" />
     <Compile Include="Intefaces\IPathService.cs" />
     <Compile Include="Intefaces\IProgressInterface.cs" />

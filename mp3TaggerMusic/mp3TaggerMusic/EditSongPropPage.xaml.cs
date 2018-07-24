@@ -33,6 +33,21 @@ namespace mp3TaggerMusic
 
             _pickedFile = pickedFile;
             FillSongInfo(pickedFile);
+
+            #region Revisando si el dispositivo tiene acceso a internet para poder usar la caracteristica de autocompletar
+            bool hasConnection = DependencyService.Get<Intefaces.IConnectivityChecker>().DeviceHasInternet();
+
+            if (!hasConnection)
+            {
+                //btnAutoComplete.IsEnabled = false;
+                btnAutoComplete.Image = "autocomplete_dis.png";
+            }
+            else
+            {
+                //btnAutoComplete.IsEnabled = true;
+                btnAutoComplete.Image = "autocomplete.png";
+            }
+            #endregion
         }
 
         public async void FillSongInfo(FileData pickedFile)
@@ -57,104 +72,114 @@ namespace mp3TaggerMusic
 
                 var folder = await FileSystem.Current.GetFileFromPathAsync(picketFilePath);
 
-                streamR = await folder.OpenAsync(FileAccess.ReadAndWrite);
-
-                TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
-
-                var tagFile = //TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW));
-                    TagLib.File.Create(new FileAbstraction(picketFileName, streamR));
-                var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2);
-
-                if (tags != null)
+                using (streamR = await folder.OpenAsync(FileAccess.ReadAndWrite))
                 {
-                    var realArtist = tags.AlbumArtists.Count() > 0 ? tags.AlbumArtists : tags.Performers;
+                    TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
 
-                    txtSongTitle.Text = !string.IsNullOrEmpty(tags.Title) ? tags.Title : txtSongTitle.Text;
-                    txtArtist.Text = string.Join(", ", realArtist);
-                    txtAlbum.Text = !string.IsNullOrEmpty(tags.Album) ? tags.Album : txtAlbum.Text;
-                    txtTrackNo.Text = !string.IsNullOrEmpty(tags.Track.ToString()) ? tags.Track.ToString() : txtTrackNo.Text;
-                    txtYear.Text = !string.IsNullOrEmpty(tags.Year.ToString()) ? tags.Year.ToString() : txtYear.Text;
-                    txtGenre.Text = string.Join(", ", tags.Genres);
+                    var tagFile = //TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW));
+                        TagLib.File.Create(new FileAbstraction(picketFileName, streamR));
+                    var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2);
 
-                    if (tags.Pictures.Count() > 0)
+                    if (tags != null)
                     {
-                        var cover = tags.Pictures.FirstOrDefault().Data.Data;
-                        Stream coverStream = new MemoryStream(cover);
+                        var realArtist = tags.AlbumArtists.Count() > 0 ? tags.AlbumArtists : tags.Performers;
 
-                        imgCoverArt.Source = ImageSource.FromStream(() => coverStream);
-                    }
-                    else
-                    {
-                        imgCoverArt.Source = ImageSource.FromResource("coverart.png");
+                        txtSongTitle.Text = !string.IsNullOrEmpty(tags.Title) ? tags.Title : txtSongTitle.Text;
+                        txtArtist.Text = string.Join(", ", realArtist);
+                        txtAlbum.Text = !string.IsNullOrEmpty(tags.Album) ? tags.Album : txtAlbum.Text;
+                        txtTrackNo.Text = !string.IsNullOrEmpty(tags.Track.ToString()) ? tags.Track.ToString() : txtTrackNo.Text;
+                        txtYear.Text = !string.IsNullOrEmpty(tags.Year.ToString()) ? tags.Year.ToString() : txtYear.Text;
+                        txtGenre.Text = string.Join(", ", tags.Genres);
+
+                        if (tags.Pictures.Count() > 0)
+                        {
+                            var cover = tags.Pictures.FirstOrDefault().Data.Data;
+                            Stream coverStream = new MemoryStream(cover);
+
+                            imgCoverArt.Source = ImageSource.FromStream(() => coverStream);
+                            coverStream.Dispose();
+                        }
+                        /*else
+                        {
+                            imgCoverArt.Source = ImageSource.FromResource("coverart.png");
+                        }*/
                     }
                 }
             }
             catch (Exception ex)
             {
+                streamR.Dispose();
+
                 string msj = string.Format("Ha ocurrido un error: {0}", ex);
                 await DisplayAlert("Error", msj, "Ok");
+
             }
         }
 
-        private void btnSave_Clicked(object sender, EventArgs e)
+        private async void btnSave_Clicked(object sender, EventArgs e)
         {
             try
             {
                 byte[] fileData = _pickedFile.DataArray;
 
-                TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+                var folder = await FileSystem.Current.GetFileFromPathAsync(picketFilePath);
 
-                using (var tagFile = TagLib.File.Create(new FileAbstraction(picketFileName, streamR)/*TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW)*/))
+                using (streamR = await folder.OpenAsync(FileAccess.ReadAndWrite))
                 {
-                    var tags = tagFile.Tag;
+                    TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
 
-                    string[] realArtist = new string[] { };
-                    string[] realGenres = new string[] { };
-                    if (!string.IsNullOrEmpty(txtArtist.Text))
+                    using (var tagFile = TagLib.File.Create(new FileAbstraction(picketFileName, streamR)/*TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW)*/))
                     {
-                        var sp = txtArtist.Text.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        var tags = tagFile.Tag;
 
-                        if (sp.Count() > 0)
+                        string[] realArtist = new string[] { };
+                        string[] realGenres = new string[] { };
+                        if (!string.IsNullOrEmpty(txtArtist.Text))
                         {
-                            realArtist = sp;
+                            var sp = txtArtist.Text.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                            if (sp.Count() > 0)
+                            {
+                                realArtist = sp;
+                            }
                         }
-                    }
 
-                    if (!string.IsNullOrEmpty(txtGenre.Text))
-                    {
-                        var sp = txtGenre.Text.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                        if (sp.Count() > 0)
+                        if (!string.IsNullOrEmpty(txtGenre.Text))
                         {
-                            realGenres = sp;
+                            var sp = txtGenre.Text.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                            if (sp.Count() > 0)
+                            {
+                                realGenres = sp;
+                            }
                         }
+
+
+                        tags.Title = txtSongTitle.Text.FullTrimText();
+                        tags.Performers = realArtist;
+                        tags.AlbumArtists = realArtist;
+                        tags.Album = txtAlbum.Text.FullTrimText();
+                        tags.Track = txtTrackNo.Text.ToUInt();
+                        tags.Year = txtYear.Text.ToUInt();
+                        tags.Genres = realGenres;
+
+                        if (changedCover)
+                        {
+                            Stream coverStream = new MemoryStream(changedCoverImg);
+                            var tagCover = new TagLib.StreamFileAbstraction("hola", coverStream, coverStream);
+                            tagFile.Tag.Pictures = new[] { new TagLib.Picture(tagCover) };
+                            coverStream.Dispose();
+                        }
+                        tagFile.Save();
+                        tagFile.Dispose();
                     }
-
-
-                    tags.Title = txtSongTitle.Text.FullTrimText();
-                    tags.Performers = realArtist;
-                    tags.AlbumArtists = realArtist;
-                    tags.Album = txtAlbum.Text.FullTrimText();
-                    tags.Track = txtTrackNo.Text.ToUInt();
-                    tags.Year = txtYear.Text.ToUInt();
-                    tags.Genres = realGenres;
-
-                    if (changedCover)
-                    {
-                        Stream coverStream = new MemoryStream(changedCoverImg);
-                        var tagCover = new TagLib.StreamFileAbstraction("hola", coverStream, coverStream);
-                        tagFile.Tag.Pictures = new[] { new TagLib.Picture(tagCover) };
-                        coverStream.Dispose();
-                    }
-                    tagFile.Save();
-                    tagFile.Dispose();
-                    streamR.Dispose();
                 }
             }
             catch (Exception ex)
             {
+                streamR.Dispose();
                 string msj = string.Format("Ha ocurrido un error: {0}", ex);
-                DisplayAlert("Error", msj, "Ok");
+                await DisplayAlert("Error", msj, "Ok");
             }
         }
 
@@ -207,6 +232,21 @@ namespace mp3TaggerMusic
             try
             {
                 Utility.Show();
+                
+                bool hasConnection = DependencyService.Get<Intefaces.IConnectivityChecker>().DeviceHasInternet();
+
+                if (hasConnection)
+                {
+                    btnAutoComplete.Image = "autocomplete.png";
+                }
+                else
+                {
+                    Utility.Hide();
+                    await DisplayAlert("No Conexion", "Debe estar conectado a internet para usar esta opcion.", "Ok");                    
+                    return;
+                }
+
+
 
                 var app = Application.Current as App;
                 bool _onlyCompleteMissingInfo = app.OnlyCompleteMissingInfo;

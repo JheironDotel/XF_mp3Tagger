@@ -3,12 +3,17 @@ Mp3Tagger:
         ✔ Donde se ve la imagen de la caraturla hacer que cuando le den click te mande a buscar alguna imagen por si uno quiere ponerle su propia caratula @done (2018-6-2 10:44:32)
         ✔ Validar que sean imagenes los que se busquen cuando se haga lo de arriba @done (2018-6-2 10:44:35)
         ✔ Validar que solo sean archivos de musica a modificar los datos @done (2018-6-2 10:44:37)
-        ☐ poner el boton de guardar como un boton flotante
+        ☐ poner el boton de guardar como un boton flotante @high 
         ✔ poner el menu de settin y agregar propiedad que guarde si la paersona quiere reemplazar toda la informacion o solo poner la informacion que esta vacia @done (2018-6-5 10:35:03)
-        ☐ poner un loading cuando se este buscando la informacion de X cancion
+        ✔ poner un loading cuando se este buscando la informacion de X cancion @done (24/7/2018 16:06:56)
             https://www.youtube.com/watch?v=k0VNjuhhE-w
-        ☐ poner el api key en un .config y excluir ese archivo del commit
-        
+        ☐ listar todos los archivos de audio en el dispositivo y mostrarlos en un listview (nombre,ubicacion) @high @critical 
+        ☐ hacer logica para arreglar el nombre de las canciones (si no tiene el titulo en los metadatos entonces cojerlo del nombre que tiene el archivo y hacerle su respectivo tratamiento) @high @critical 
+        ☐ poner tabbed pages uno con el la opcion para buscar una cancion en especifico y otra con la opcion de buscar todas las canciones del celular @high @critical 
+        ☐ cuando seleccionen el tabbed pages con la opcion de buscar todas la canciones notificarle al usuario de que se buscaran todos los archivos de audio del celular y poner un loading en lo que ese proceso se ejecuta @high 
+        ✔ preguntar si el dispositivo tienen internet, si no tiene entonces desactivar el boton de autocompletar y si clickean en el que notifique que debe estar conectado a internet @high @critical @done (24/7/2018 17:39:27)
+        ☐ si viene mas de una cancion en el resultado para buscar la metadata, mostrarla en una pantallita para que el usuario seleccione la coincidencia @high @critical 
+        ☐ revisar un error que da cuando se intenta seleccionar el archivo varias veces seguidas @critical 
 
 
 
@@ -17,7 +22,10 @@ Mp3Tagger:
 
 
 
-
+cd C:\Program Files (x86)\Android\android-sdk\platform-tools
+adb push C:\Downloads\atreyu - the theft.mp3 /sdcard/atreyu - the theft.mp3
+adb push C:\Downloads\02.-Antologia-De-Caricias.mp3 /sdcard/02.-Antologia-De-Caricias.mp3
+adb push C:\Downloads\Wait-OkayMp3.Com.mp3 /sdcard/Wait-OkayMp3.Com.mp3
 
 COMO HACER COMMIT EN GIT:
     There is a lot easier way to do this that doesn't even require you to do anything outside Visual Studio.

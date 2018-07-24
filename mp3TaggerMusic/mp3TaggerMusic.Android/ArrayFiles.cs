@@ -22,7 +22,6 @@ namespace mp3TaggerMusic.Droid
         {
             AllAudioFiles();
 
-
             List<string> faaa = new List<string>();
             var file = System.IO.Directory.GetFiles(path);
             if (file.Any())
