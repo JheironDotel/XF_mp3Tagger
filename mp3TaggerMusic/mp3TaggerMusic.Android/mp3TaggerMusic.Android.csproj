@@ -167,6 +167,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayFiles.cs" />
+    <Compile Include="FileList.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="ProgressLoader.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

@@ -10,8 +10,9 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using System.Runtime.CompilerServices;
+using mp3TaggerMusic.Droid;
 
-[assembly: Xamarin.Forms.Dependency(typeof(mp3TaggerMusic.Intefaces.IPathService))]
+[assembly: Xamarin.Forms.Dependency(typeof(AndroidPaths))]
 namespace mp3TaggerMusic.Droid
 {
     public class AndroidPaths : Intefaces.IPathService

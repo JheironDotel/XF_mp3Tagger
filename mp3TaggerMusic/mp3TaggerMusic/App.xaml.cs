@@ -31,7 +31,9 @@ namespace mp3TaggerMusic
             InitializeComponent();
 
             DependencyService.Register<IProgressInterface>();
-            
+            DependencyService.Register<IPathService>();
+            DependencyService.Register<IFileList>();
+
             MainPage = new NavigationPage(new FileListPage());
         }
 

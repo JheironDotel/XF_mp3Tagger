@@ -21,7 +21,7 @@ namespace mp3TaggerMusic
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FileListPage : ContentPage
-    {        
+    {
         private async Task<List<FilesData>> getFilesOnPath(string path = "")
         {
             List<FilesData> fdl = new List<FilesData>();
@@ -115,6 +115,26 @@ namespace mp3TaggerMusic
             }
 
             Utility.Show();
+
+            try
+            {
+                var aaa = DependencyService.Get<Intefaces.IFileList>().GetFilesPaths();
+
+                var z = DependencyService.Get<Intefaces.IPathService>().InternalFolder;
+                var w = DependencyService.Get<Intefaces.IPathService>().PrivateExternalFolder;
+                var wa = DependencyService.Get<Intefaces.IPathService>().PublicExternalFolder;
+
+
+
+                
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
 
             await getFilesOnPath(pickedFile.FilePath);
 
