@@ -27,12 +27,19 @@ namespace mp3TaggerMusic
         private string picketFileName;
         private string picketFilePath;
 
-        public EditSongPropPage(FileData pickedFile = null)
+        public EditSongPropPage(FileData pickedFile = null, string filePath = "")
         {
             InitializeComponent();
 
-            _pickedFile = pickedFile;
-            FillSongInfo(pickedFile);
+            if (pickedFile != null)
+            {
+                _pickedFile = pickedFile;
+                FillSongInfo(pickedFile);
+            }
+            else
+            {
+                FillSongInfo(filePath);
+            }
 
             #region Revisando si el dispositivo tiene acceso a internet para poder usar la caracteristica de autocompletar
             bool hasConnection = DependencyService.Get<Intefaces.IConnectivityChecker>().DeviceHasInternet();
@@ -65,14 +72,11 @@ namespace mp3TaggerMusic
                     return;
                 }
 
-
-                byte[] fileData = pickedFile.DataArray;
-
                 streamR = new MemoryStream();
 
                 var folder = await FileSystem.Current.GetFileFromPathAsync(picketFilePath);
 
-                using (streamR = await folder.OpenAsync(FileAccess.ReadAndWrite))
+                using (streamR = await folder.OpenAsync(FileAccess.Read))
                 {
                     TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
 
@@ -99,10 +103,56 @@ namespace mp3TaggerMusic
                             imgCoverArt.Source = ImageSource.FromStream(() => coverStream);
                             coverStream.Dispose();
                         }
-                        /*else
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                streamR.Dispose();
+
+                string msj = string.Format("Ha ocurrido un error: {0}", ex);
+                await DisplayAlert("Error", msj, "Ok");
+
+            }
+        }
+
+        public async void FillSongInfo(string FilePath)
+        {
+            try
+            {
+                picketFileName = Path.GetFileName(FilePath);
+                picketFilePath = FilePath;
+
+                streamR = new MemoryStream();
+
+                var folder = await FileSystem.Current.GetFileFromPathAsync(FilePath);
+
+                using (streamR = await folder.OpenAsync(FileAccess.Read))
+                {
+                    TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+
+                    var tagFile = TagLib.File.Create(new FileAbstraction(picketFileName, streamR));
+                    var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2);
+
+                    if (tags != null)
+                    {
+                        var realArtist = tags.AlbumArtists.Count() > 0 ? tags.AlbumArtists : tags.Performers;
+
+                        txtSongTitle.Text = !string.IsNullOrEmpty(tags.Title) ? tags.Title : txtSongTitle.Text;
+                        txtArtist.Text = string.Join(", ", realArtist);
+                        txtAlbum.Text = !string.IsNullOrEmpty(tags.Album) ? tags.Album : txtAlbum.Text;
+                        txtTrackNo.Text = !string.IsNullOrEmpty(tags.Track.ToString()) ? tags.Track.ToString() : txtTrackNo.Text;
+                        txtYear.Text = !string.IsNullOrEmpty(tags.Year.ToString()) ? tags.Year.ToString() : txtYear.Text;
+                        txtGenre.Text = string.Join(", ", tags.Genres);
+
+                        if (tags.Pictures.Count() > 0)
                         {
-                            imgCoverArt.Source = ImageSource.FromResource("coverart.png");
-                        }*/
+                            var cover = tags.Pictures.FirstOrDefault().Data.Data;
+                            Stream coverStream = new MemoryStream(cover);
+
+                            imgCoverArt.Source = ImageSource.FromStream(() => coverStream);
+                            coverStream.Dispose();
+                        }
                     }
                 }
             }
@@ -120,8 +170,6 @@ namespace mp3TaggerMusic
         {
             try
             {
-                byte[] fileData = _pickedFile.DataArray;
-
                 var folder = await FileSystem.Current.GetFileFromPathAsync(picketFilePath);
 
                 using (streamR = await folder.OpenAsync(FileAccess.ReadAndWrite))
@@ -232,7 +280,7 @@ namespace mp3TaggerMusic
             try
             {
                 Utility.Show();
-                
+
                 bool hasConnection = DependencyService.Get<Intefaces.IConnectivityChecker>().DeviceHasInternet();
 
                 if (hasConnection)
@@ -242,7 +290,7 @@ namespace mp3TaggerMusic
                 else
                 {
                     Utility.Hide();
-                    await DisplayAlert("No Conexion", "Debe estar conectado a internet para usar esta opcion.", "Ok");                    
+                    await DisplayAlert("No Conexion", "Debe estar conectado a internet para usar esta opcion.", "Ok");
                     return;
                 }
 
@@ -296,41 +344,6 @@ namespace mp3TaggerMusic
                 Utility.Hide();
 
                 throw;
-            }
-        }
-
-
-
-        /*
-         
-                //open root folder
-                IFolder rootFolder = FileSystem.Current.LocalStorage;
-                //open folder if exists
-
-                IFolder folder = await rootFolder.CreateFolderAsync("Download", CreationCollisionOption.OpenIfExists);
-                
-
-                var path = DependencyService.Get<Intefaces.IPathService>().InternalFolder;
-                var pat2h = DependencyService.Get<Intefaces.IPathService>().PrivateExternalFolder;
-                var pat23 = DependencyService.Get<Intefaces.IPathService>().PublicExternalFolder;
-
-                //open file if exists
-                IFile file = await folder.GetFileAsync("Atreyu_-_The_Theft.mp3");
-                //using (Stream stream = await file.OpenAsync(FileAccess.ReadAndWrite))
-                //{
-                //    long length = stream.Length;
-                //    BackgroundModel.Image = new byte[length];
-                //    stream.Read(BackgroundModel.Image, 0, (int)length);
-                //}
-             
-             
-             
-         */
-        public static string Directorypath
-        {
-            get
-            {
-                return "";//Path.Combine((string)Android.OS.Environment.ExternalStorageDirectory, "FolderPath");
             }
         }
     }

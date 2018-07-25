@@ -13,10 +13,18 @@ Mp3Tagger:
         ☐ cuando seleccionen el tabbed pages con la opcion de buscar todas la canciones notificarle al usuario de que se buscaran todos los archivos de audio del celular y poner un loading en lo que ese proceso se ejecuta @high 
         ✔ preguntar si el dispositivo tienen internet, si no tiene entonces desactivar el boton de autocompletar y si clickean en el que notifique que debe estar conectado a internet @high @critical @done (24/7/2018 17:39:27)
         ☐ si viene mas de una cancion en el resultado para buscar la metadata, mostrarla en una pantallita para que el usuario seleccione la coincidencia @high @critical 
-        ☐ revisar un error que da cuando se intenta seleccionar el archivo varias veces seguidas @critical 
+        ✔ revisar un error que da cuando se intenta seleccionar el archivo varias veces seguidas @critical @done (25/7/2018 9:23:39)
 
 
-
+NOTA: Flujo app con los tabs
+el primer tab se llamara  Song listara todas las canciones del dispositivo
+        ☐ un listview con el titulo de la cancion, el cover y el artista si esta disponible, sino el nombre del archivo tal cual
+        ☐ un check para marcar X cancion
+        ☐ un boton para seleccionar todo
+        ☐ habra una opcion para autocompletar todo los seleccionados
+        ☐ si le dan click a X cancion entrar a la pantalla de edicion
+        
+el segunto tab sera Cancion y se buscara un archivo en especifico, teniendo un boton de buscar y el flujo normal de busqueda
 
 
 

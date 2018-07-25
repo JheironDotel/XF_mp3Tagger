@@ -55,7 +55,10 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\FilesData.cs" />
+    <Compile Include="MainTabbedPage.xaml.cs">
+      <DependentUpon>MainTabbedPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SongFilesData.cs" />
     <Compile Include="Models\SongInfoAudioDB.cs" />
     <Compile Include="Models\SongInfoClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -131,6 +134,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="appSettings.config.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainTabbedPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

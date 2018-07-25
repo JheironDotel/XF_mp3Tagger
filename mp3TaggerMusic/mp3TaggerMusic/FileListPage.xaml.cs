@@ -22,57 +22,58 @@ namespace mp3TaggerMusic
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FileListPage : ContentPage
     {
-        private async Task<List<FilesData>> getFilesOnPath(string path = "")
-        {
-            List<FilesData> fdl = new List<FilesData>();
-
-
-            var folder = await FileSystem.Current.GetFolderFromPathAsync(path);
-            var allfiles = folder.GetFilesAsync();
-
-            var f = new FilesData() { NameFile = "Prueba", Extension = ".mp3", Path = "c/wndows/a" };
-            fdl.Add(f);
-
-            f = new FilesData() { NameFile = "Prueba 2", Extension = ".mp4", Path = "c/wndows/b" };
-            fdl.Add(f);
-
-            return fdl;
-        }
-
+        private bool wasLoad = false;
 
         public FileListPage()
         {
             InitializeComponent();
-
-            //lvFiles.ItemsSource = getFlies();            
         }
 
-        protected override async void OnAppearing()
-        {//test api
+        private async Task<List<SongFilesData>> getAllSongFiles()
+        {
+            List<SongFilesData> sfd = new List<SongFilesData>();
             try
-            {/*
-                string songTitle = "the theft";
-                string songArtist = "atreyu";
+            {
+                var songsPaths = DependencyService.Get<Intefaces.IFileList>().GetAllSongFiles(Utility.AudioExtensionList);
 
-                string realUrl = string.Format(lastfmUrl, lastfmApiKey, System.Net.WebUtility.UrlEncode(songArtist), System.Net.WebUtility.UrlEncode(songTitle));
-                
-                var content = await _client.GetStringAsync(realUrl);
-             
-                //var songData = JsonConvert.DeserializeObject<SongInfoClass.SongObject>(content);   //.Replace("#text","text").Replace("@attr", "attr")
-                
-
-                //var posts = JsonConvert.DeserializeObject<List<Post>>(content);
-
-                //_posts = new ObservableCollection<Post>(posts);
-                //postsListView.ItemsSource = _posts;
-                */
-
+                foreach (var path in songsPaths)
+                {
+                    var infoSong = await Utility.BasicInfoSong(path);
+                    if (infoSong != null)
+                    {
+                        sfd.Add(new SongFilesData()
+                        {
+                            SongName = infoSong.SongName,
+                            ArtistName = infoSong.ArtistName,
+                            AlbumName = infoSong.AlbumName,
+                            AlbumCover = infoSong.AlbumCover,
+                            SongFilePath = infoSong.SongFilePath
+                        });
+                    }
+                }
+                wasLoad = true;
             }
             catch (Exception ex)
             {
-                throw;
+                Utility.Hide();
             }
+            return sfd;
+        }
+
+
+        protected override async void OnAppearing()
+        {
             base.OnAppearing();
+
+            Utility.Show();
+
+            if (!wasLoad)
+            {
+                lvTracksFiles.ItemsSource = await getAllSongFiles();
+            }
+
+            Utility.Hide();
+
         }
 
         private async void btnFileSel_Clicked(object sender, EventArgs e)
@@ -92,16 +93,6 @@ namespace mp3TaggerMusic
             Utility.Hide();
         }
 
-        private async void ToolbarItem_Activated(object sender, EventArgs e)
-        {
-            ToolbarItem tbi = (ToolbarItem)sender;
-            if (tbi.Text == "Settings")
-            {
-                var page = new SettingsPage();
-                await Navigation.PushAsync(page);
-            }
-        }
-
         private async void btnFileSelPath_Clicked(object sender, EventArgs e)
         {
             await DisplayAlert("Informacion", "Debe seleccionar un archivo de audio para asi obtener todos los archivos de audio compatibles de dicha ubicacion", "Ok");
@@ -118,7 +109,7 @@ namespace mp3TaggerMusic
 
             try
             {
-                var aaa = DependencyService.Get<Intefaces.IFileList>().GetFilesPaths();
+                var aaa = DependencyService.Get<Intefaces.IFileList>().GetAllSongFiles(new string[] { });
 
                 var z = DependencyService.Get<Intefaces.IPathService>().InternalFolder;
                 var w = DependencyService.Get<Intefaces.IPathService>().PrivateExternalFolder;
@@ -126,7 +117,7 @@ namespace mp3TaggerMusic
 
 
 
-                
+
 
             }
             catch (Exception ex)
@@ -136,7 +127,31 @@ namespace mp3TaggerMusic
             }
 
 
-            await getFilesOnPath(pickedFile.FilePath);
+            //await getFilesOnPath(pickedFile.FilePath);
+
+            Utility.Hide();
+        }
+
+        private async void lvTracksFiles_Refreshing(object sender, EventArgs e)
+        {            
+            lvTracksFiles.ItemsSource = await getAllSongFiles();
+            lvTracksFiles.EndRefresh();
+        }
+
+        private async void lvTracksFiles_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            Utility.Show();
+
+            var songfilesdata = e.Item as SongFilesData;
+            if (songfilesdata != null)
+            {
+                await Navigation.PushAsync(new EditSongPropPage(null, songfilesdata.SongFilePath));
+            }
+            else
+            {
+                await DisplayAlert("Advertencia", "Debe seleccionar una cancion", "Ok");
+            }
+            ((ListView)sender).SelectedItem = null;
 
             Utility.Hide();
         }

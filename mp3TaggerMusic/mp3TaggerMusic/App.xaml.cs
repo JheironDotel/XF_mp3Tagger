@@ -3,9 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Xamarin.Forms;
-[assembly: Dependency(typeof(mp3TaggerMusic.Intefaces.IPathService))]
 
 namespace mp3TaggerMusic
 {
@@ -35,7 +33,8 @@ namespace mp3TaggerMusic
             DependencyService.Register<IFileList>();
             DependencyService.Register<IConnectivityChecker>();
 
-            MainPage = new NavigationPage(new FileListPage());
+            //MainPage = new NavigationPage(new MainPage());
+            MainPage = new NavigationPage(new MainTabbedPage());
         }
 
         protected override void OnStart()

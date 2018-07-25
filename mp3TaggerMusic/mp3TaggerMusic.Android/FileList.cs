@@ -24,7 +24,16 @@ namespace mp3TaggerMusic.Droid
 
         }
 
-        public string GetFilesPaths()
+        public IEnumerable<string> GetAllSongFiles(string[] AudioExtensionList)
+        {   
+            ArrayFiles arrayFiles = new ArrayFiles();
+            var songsFiles = arrayFiles.AllAudioFiles(AudioExtensionList);
+    
+            return songsFiles;
+        }
+
+
+        public string GetFileFromPath()
         {
             string path = Path.Combine(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath, Android.OS.Environment.DirectoryDownloads);
             ArrayFiles arrayFiles = new ArrayFiles();

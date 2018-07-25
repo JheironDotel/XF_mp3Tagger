@@ -73,8 +73,6 @@ namespace mp3TaggerMusic.CustomCode
             }
         }
 
-
-
         public static async Task<SongInfoAudioDB.SongObject> getSongDataInfo_AudioDB(string songTitle = "", string songArtist = "")
         {
             using (System.Net.Http.HttpClient _client = new System.Net.Http.HttpClient())
@@ -128,6 +126,56 @@ namespace mp3TaggerMusic.CustomCode
             DependencyService.Get<IProgressInterface>().Hide();
         }
 
+        public static async Task<SongFilesData> BasicInfoSong(string filePath)
+        {
+            var folder = await PCLStorage.FileSystem.Current.GetFileFromPathAsync(filePath);
+
+            Stream streamR = new MemoryStream();
+
+            SongFilesData sfd = new SongFilesData();
+            var filename = Path.GetFileName(filePath);
+
+            using (streamR = await folder.OpenAsync(PCLStorage.FileAccess.Read))
+            {
+                TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+
+                var tagFile = TagLib.File.Create(new FileAbstraction(filePath, streamR));
+                var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2);
+
+                if (tags != null)
+                {
+                    var realArtist = tags.AlbumArtists.Count() > 0 ? tags.AlbumArtists : tags.Performers;
+
+                    sfd.AlbumName = tags.Album;
+                    sfd.ArtistName = string.Join(", ", realArtist);
+                    sfd.SongFilePath = filePath;
+
+                    if (!string.IsNullOrEmpty(tags.Title))
+                    {
+                        sfd.SongName = tags.Title;
+                    }
+                    else
+                    {
+                        sfd.SongName = filename;
+                    }
+                    
+                    if (tags.Pictures.Count() > 0)
+                    {
+                        var cover = tags.Pictures.FirstOrDefault().Data.Data;
+                        Stream coverStream = new MemoryStream(cover);
+
+                        sfd.AlbumCover = ImageSource.FromStream(() => coverStream);
+                    }
+                    else
+                    {
+                        var imgSource = ImageSource.FromFile("coverart.png");
+                        sfd.AlbumCover = imgSource;
+                    }
+                }
+            }
+
+            return sfd;
+        }
     }
 
 }

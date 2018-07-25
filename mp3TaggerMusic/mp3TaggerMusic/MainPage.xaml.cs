@@ -12,6 +12,8 @@ namespace mp3TaggerMusic
         public MainPage()
         {
             InitializeComponent();
+
+           
         }
     }
 }

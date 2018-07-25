@@ -2,9 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="mp3TaggerMusic.FileListPage">
-    <ContentPage.ToolbarItems>        
-        <ToolbarItem Text="Settings" Activated="ToolbarItem_Activated" Order="Secondary"></ToolbarItem>
-    </ContentPage.ToolbarItems>
+
     <!--ItemTapped="listView_ItemTapped"
               ItemSelected="listView_ItemSelected"
               IsPullToRefreshEnabled="True"
@@ -12,13 +10,13 @@
     <StackLayout>
         <Button x:Name="btnFileSel" Clicked="btnFileSel_Clicked" Text="Selecionar Archivo de Audio"></Button>
         <Button x:Name="btnFileSelPath" Clicked="btnFileSelPath_Clicked" Text="Selecionar Ubicacion Archivos de Audio"></Button>
-        
-        
-        <ListView x:Name="lvFiles" SeparatorVisibility="Default" SeparatorColor="Blue">
+
+
+        <ListView x:Name="lvTracksFiles" SeparatorVisibility="Default" SeparatorColor="Blue" Refreshing="lvTracksFiles_Refreshing" IsPullToRefreshEnabled="True" ItemTapped="lvTracksFiles_ItemTapped">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding NameFile}" Detail="{Binding Path}"/>
-                    <!--<ImageCell Text="{Binding Name}" Detail="{Binding Status}" ImageSource="{Binding Image}"/>-->
+                    <!--<TextCell Text="{Binding NameFile}" Detail="{Binding Path}"/>-->
+                    <ImageCell Text="{Binding SongName}" Detail="{Binding ArtistName}" ImageSource="{Binding AlbumCover}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
 

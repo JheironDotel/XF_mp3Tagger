@@ -8,6 +8,6 @@ namespace mp3TaggerMusic.Intefaces
 {
     public interface IFileList
     {
-        string GetFilesPaths();
+        IEnumerable<string> GetAllSongFiles(string[] AudioExtensionList);
     }
 }
