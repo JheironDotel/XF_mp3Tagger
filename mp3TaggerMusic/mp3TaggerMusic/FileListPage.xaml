@@ -3,10 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="mp3TaggerMusic.FileListPage">
 
-    <!--ItemTapped="listView_ItemTapped"
-              ItemSelected="listView_ItemSelected"
-              IsPullToRefreshEnabled="True"
-              Refreshing="listView_Refreshing"-->
     <StackLayout>
         <Button x:Name="btnFileSel" Clicked="btnFileSel_Clicked" Text="Selecionar Archivo de Audio"></Button>
         <Button x:Name="btnFileSelPath" Clicked="btnFileSelPath_Clicked" Text="Selecionar Ubicacion Archivos de Audio"></Button>
@@ -15,8 +11,27 @@
         <ListView x:Name="lvTracksFiles" SeparatorVisibility="Default" SeparatorColor="Blue" Refreshing="lvTracksFiles_Refreshing" IsPullToRefreshEnabled="True" ItemTapped="lvTracksFiles_ItemTapped">
             <ListView.ItemTemplate>
                 <DataTemplate>
+                    <ViewCell>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackLayout Orientation="Horizontal" Margin="10,0,0,0" HorizontalOptions="FillAndExpand">
+                                <Image Source="{Binding AlbumCover}" HorizontalOptions="Start" />
+                            </StackLayout>
+                            <StackLayout VerticalOptions="CenterAndExpand" Margin="50,0,0,0">
+                                <Label Text="{Binding SongName}"  />
+                                <Label Text="{Binding ArtistName}" FontSize="10" />
+                            </StackLayout>
+                            <Switch IsToggled="{Binding Selected}" Grid.Column="1" />
+                        </Grid>
+                    </ViewCell>
+
+
                     <!--<TextCell Text="{Binding NameFile}" Detail="{Binding Path}"/>-->
-                    <ImageCell Text="{Binding SongName}" Detail="{Binding ArtistName}" ImageSource="{Binding AlbumCover}"/>
+                    <!--<ImageCell Text="{Binding SongName}" Detail="{Binding ArtistName}" ImageSource="{Binding AlbumCover}"/>
+                    <Switch IsToggled="{Binding Selected}" />-->
                 </DataTemplate>
             </ListView.ItemTemplate>
 

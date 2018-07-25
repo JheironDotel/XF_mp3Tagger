@@ -23,6 +23,7 @@ namespace mp3TaggerMusic
     public partial class FileListPage : ContentPage
     {
         private bool wasLoad = false;
+        public bool _checkAllSongs = false;
 
         public FileListPage()
         {
@@ -47,7 +48,8 @@ namespace mp3TaggerMusic
                             ArtistName = infoSong.ArtistName,
                             AlbumName = infoSong.AlbumName,
                             AlbumCover = infoSong.AlbumCover,
-                            SongFilePath = infoSong.SongFilePath
+                            SongFilePath = infoSong.SongFilePath,
+                            Selected = infoSong.Selected
                         });
                     }
                 }
@@ -133,7 +135,7 @@ namespace mp3TaggerMusic
         }
 
         private async void lvTracksFiles_Refreshing(object sender, EventArgs e)
-        {            
+        {
             lvTracksFiles.ItemsSource = await getAllSongFiles();
             lvTracksFiles.EndRefresh();
         }
@@ -154,6 +156,19 @@ namespace mp3TaggerMusic
             ((ListView)sender).SelectedItem = null;
 
             Utility.Hide();
+        }
+
+
+        public void CheckAllSong()
+        {
+            if (_checkAllSongs)
+            {
+                //lvTracksFiles.Items.OfType<ListViewItem>().ToList().ForEach(item => item.Checked = check);
+                foreach (var item in lvTracksFiles.ItemsSource)
+                {
+                    
+                }
+            }
         }
     }
 }

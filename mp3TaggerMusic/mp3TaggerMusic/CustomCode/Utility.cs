@@ -176,6 +176,11 @@ namespace mp3TaggerMusic.CustomCode
 
             return sfd;
         }
+
+        public static bool DeviceHasInternet()
+        {
+            return DependencyService.Get<Intefaces.IConnectivityChecker>().DeviceHasInternet();
+        }
     }
 
 }

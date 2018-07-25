@@ -18,7 +18,7 @@
             </StackLayout>
 
             <StackLayout Orientation="Horizontal" Padding="0" Spacing="6" HorizontalOptions="EndAndExpand">
-                <Button x:Name="btnAutoComplete" Image="autocomplete.png" Clicked="btnAutoComplete_Clicked" BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" />
+                <Button x:Name="btnAutoComplete" Image="autocomplete_o.png" Clicked="btnAutoComplete_Clicked" BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" />
             </StackLayout>
 
             <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">

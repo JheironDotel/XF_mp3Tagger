@@ -42,17 +42,17 @@ namespace mp3TaggerMusic
             }
 
             #region Revisando si el dispositivo tiene acceso a internet para poder usar la caracteristica de autocompletar
-            bool hasConnection = DependencyService.Get<Intefaces.IConnectivityChecker>().DeviceHasInternet();
+            bool hasConnection = Utility.DeviceHasInternet();
 
             if (!hasConnection)
             {
                 //btnAutoComplete.IsEnabled = false;
-                btnAutoComplete.Image = "autocomplete_dis.png";
+                btnAutoComplete.Image = "autocomplete_ot_dis.png";
             }
             else
             {
                 //btnAutoComplete.IsEnabled = true;
-                btnAutoComplete.Image = "autocomplete.png";
+                btnAutoComplete.Image = "autocomplete_o.png";
             }
             #endregion
         }
@@ -281,16 +281,16 @@ namespace mp3TaggerMusic
             {
                 Utility.Show();
 
-                bool hasConnection = DependencyService.Get<Intefaces.IConnectivityChecker>().DeviceHasInternet();
+                bool hasConnection = Utility.DeviceHasInternet();
 
                 if (hasConnection)
                 {
-                    btnAutoComplete.Image = "autocomplete.png";
+                    btnAutoComplete.Image = "autocomplete_o.png";
                 }
                 else
                 {
                     Utility.Hide();
-                    await DisplayAlert("No Conexion", "Debe estar conectado a internet para usar esta opcion.", "Ok");
+                    await DisplayAlert("No Conexion", "Debe estar conectado a internet para usar esta funcionalidad.", "Ok");
                     return;
                 }
 
