@@ -4,9 +4,13 @@
              x:Class="mp3TaggerMusic.FileListPage">
 
     <StackLayout>
-        <Button x:Name="btnFileSel" Clicked="btnFileSel_Clicked" Text="Selecionar Archivo de Audio"></Button>
-        <Button x:Name="btnFileSelPath" Clicked="btnFileSelPath_Clicked" Text="Selecionar Ubicacion Archivos de Audio"></Button>
 
+        <!--<Button x:Name="btnFileSel" Clicked="btnFileSel_Clicked" Text="Selecionar Archivo de Audio"></Button>
+            <Button x:Name="btnFileSelPath" Clicked="btnFileSelPath_Clicked" Text="Selecionar Ubicacion Archivos de Audio"></Button>-->
+        <StackLayout Orientation="Horizontal" Padding="0" Spacing="6" HorizontalOptions="EndAndExpand">
+            <Button x:Name="btnCheckAll" Image="checkall_black.png" BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" Clicked="btnCheckAll_Clicked"></Button>
+            <Button x:Name="btnAutoComplete" Image="autocomplete_o.png" BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" Clicked="btnAutoComplete_Clicked"></Button>
+        </StackLayout>
 
         <ListView x:Name="lvTracksFiles" SeparatorVisibility="Default" SeparatorColor="Blue" Refreshing="lvTracksFiles_Refreshing" IsPullToRefreshEnabled="True" ItemTapped="lvTracksFiles_ItemTapped">
             <ListView.ItemTemplate>

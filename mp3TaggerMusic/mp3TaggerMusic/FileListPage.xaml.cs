@@ -23,14 +23,24 @@ namespace mp3TaggerMusic
     public partial class FileListPage : ContentPage
     {
         private bool wasLoad = false;
-        public bool _checkAllSongs = false;
+        private bool wasChecked = false;
 
         public FileListPage()
         {
             InitializeComponent();
+
+            bool hasConnection = Utility.DeviceHasInternet();
+            if (!hasConnection)
+            {
+                btnAutoComplete.Image = "autocomplete_ot_dis.png";
+            }
+            else
+            {
+                btnAutoComplete.Image = "autocomplete_o.png";
+            }
         }
 
-        private async Task<List<SongFilesData>> getAllSongFiles()
+        private async Task<List<SongFilesData>> getAllSongFiles(bool isChecked = false)
         {
             List<SongFilesData> sfd = new List<SongFilesData>();
             try
@@ -49,7 +59,7 @@ namespace mp3TaggerMusic
                             AlbumName = infoSong.AlbumName,
                             AlbumCover = infoSong.AlbumCover,
                             SongFilePath = infoSong.SongFilePath,
-                            Selected = infoSong.Selected
+                            Selected = isChecked
                         });
                     }
                 }
@@ -158,16 +168,31 @@ namespace mp3TaggerMusic
             Utility.Hide();
         }
 
-
-        public void CheckAllSong()
+        private async void btnCheckAll_Clicked(object sender, EventArgs e)
         {
-            if (_checkAllSongs)
+            if (!wasChecked)
+            { wasChecked = true; }
+            else { wasChecked = false; }
+
+            lvTracksFiles.ItemsSource = await getAllSongFiles(wasChecked);
+            lvTracksFiles.EndRefresh();
+        }
+
+        private async void btnAutoComplete_Clicked(object sender, EventArgs e)
+        {
+            var allSfd = lvTracksFiles.ItemsSource as List<SongFilesData>;
+            var allcheckeds = allSfd.Where(x => x.Selected).ToList();
+            if (allcheckeds.Count() > 0)
             {
-                //lvTracksFiles.Items.OfType<ListViewItem>().ToList().ForEach(item => item.Checked = check);
-                foreach (var item in lvTracksFiles.ItemsSource)
+                foreach (SongFilesData sfd in allcheckeds)
                 {
-                    
+                    //mi proceso de actualizar
+                    await DisplayAlert("Informacion", "La cancion: " + sfd.SongName + " fue seleccionada", "Ok");
                 }
+            }
+            else
+            {
+                await DisplayAlert("Advertencia", "Debe seleccionar al menos una cancion.", "Ok");
             }
         }
     }

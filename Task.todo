@@ -15,14 +15,15 @@ Mp3Tagger:
         ☐ si viene mas de una cancion en el resultado para buscar la metadata, mostrarla en una pantallita para que el usuario seleccione la coincidencia @high @critical 
         ✔ revisar un error que da cuando se intenta seleccionar el archivo varias veces seguidas @critical @done (25/7/2018 9:23:39)
         ☐ cuando modifiquen una cancion retornar a la opcion y refrescar listview @high 
+        ☐ hacer el proceso de completar canciones automaticamente @critical 
 
 
 NOTA: Flujo app con los tabs
-el primer tab se llamara  Song listara todas las canciones del dispositivo
+el primer tab se llamara Song listara todas las canciones del dispositivo
         ✔ un listview con el titulo de la cancion, el cover y el artista si esta disponible, sino el nombre del archivo tal cual @done (25/7/2018 16:22:22)
-        ☐ un check para marcar X cancion
-        ☐ un boton para seleccionar todo
-        ☐ habra una opcion para autocompletar todo los seleccionados
+        ✔ un check para marcar X cancion @done (26/7/2018 11:21:19)
+        ✔ un boton para seleccionar todo @done (26/7/2018 11:21:21)
+        ✔ habra una opcion para autocompletar todo los seleccionados @done (26/7/2018 11:34:31)
         ✔ si le dan click a X cancion entrar a la pantalla de edicion @done (25/7/2018 16:22:33)
         
 el segunto tab sera Cancion y se buscara un archivo en especifico, teniendo un boton de buscar y el flujo normal de busqueda

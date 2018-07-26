@@ -2,9 +2,7 @@
 <TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="mp3TaggerMusic.MainTabbedPage">
-    <TabbedPage.ToolbarItems>
-        <ToolbarItem Text="Select All" Icon="checkall.png"  Order="Primary" Activated="ToolbarItem_Activated"></ToolbarItem>
-        <ToolbarItem x:Name="tbiAutoComplete" Text="Autocomplete Selecteds Songs" Icon="autocomplete_ot.png"  Order="Primary" Activated="ToolbarItem_Activated"></ToolbarItem>
+    <TabbedPage.ToolbarItems>       
         <ToolbarItem Text="Settings" Activated="ToolbarItem_Activated" Order="Secondary"></ToolbarItem>
     </TabbedPage.ToolbarItems>
     <!--Pages can be added as references or inline-->
