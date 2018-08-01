@@ -152,6 +152,8 @@ namespace mp3TaggerMusic
 
         private async void lvTracksFiles_ItemTapped(object sender, ItemTappedEventArgs e)
         {
+            try
+            {
             Utility.Show();
 
             var songfilesdata = e.Item as SongFilesData;
@@ -166,6 +168,14 @@ namespace mp3TaggerMusic
             ((ListView)sender).SelectedItem = null;
 
             Utility.Hide();
+
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         private async void btnCheckAll_Clicked(object sender, EventArgs e)

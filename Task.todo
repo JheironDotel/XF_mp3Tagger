@@ -16,6 +16,8 @@ Mp3Tagger:
         ✔ revisar un error que da cuando se intenta seleccionar el archivo varias veces seguidas @critical @done (25/7/2018 9:23:39)
         ☐ cuando modifiquen una cancion retornar a la opcion y refrescar listview @high 
         ☐ hacer el proceso de completar canciones automaticamente @critical 
+        ☐ Tener pendiente que del android 6.0 en adelante debo preguntar por los permisos (internet etc) @critical 
+            https://github.com/jamesmontemagno/PermissionsPlugin
 
 
 NOTA: Flujo app con los tabs
