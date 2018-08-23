@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage Title="Song Info" xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:SuaveControls.Views;assembly=SuaveControls.FloatingActionButton"
              x:Class="mp3TaggerMusic.EditSongPropPage">
 
     <ScrollView HorizontalOptions="Fill" Padding="20,5,20,5">
@@ -76,10 +77,10 @@
             </StackLayout>
 
             <StackLayout Orientation="Horizontal" Padding="0" Spacing="5" HorizontalOptions="FillAndExpand">
-                <Button x:Name="btnSave" Text="Save" HorizontalOptions="FillAndExpand" Clicked="btnSave_Clicked" />                
+                <Button x:Name="btnSave" Text="Save" HorizontalOptions="FillAndExpand" Clicked="btnSave_Clicked" />
             </StackLayout>
-
-
+            
         </StackLayout>
     </ScrollView>
+   
 </ContentPage>
