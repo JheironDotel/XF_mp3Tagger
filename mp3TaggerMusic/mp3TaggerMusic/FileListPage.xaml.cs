@@ -79,6 +79,9 @@ namespace mp3TaggerMusic
 
             Utility.Show();
 
+            //AQUI RECIBO LA VARIABLE QUE SETIE Y SI ES TRUE SETEO "wasLoad" COMO FALSO PARA QUE
+            //SE REFRESQUE EL LISTVIEWE, SINO LLAMO AL METODO REFRESH Y YA
+
             if (!wasLoad)
             {
                 lvTracksFiles.ItemsSource = await getAllSongFiles();

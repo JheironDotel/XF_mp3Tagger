@@ -127,34 +127,37 @@ namespace mp3TaggerMusic
 
                 var folder = await FileSystem.Current.GetFileFromPathAsync(FilePath);
 
-                using (streamR = await folder.OpenAsync(FileAccess.Read))
+                //using (
+                streamR = await folder.OpenAsync(FileAccess.Read);//)
+                                                                  //{
+                TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+
+                var tagFile = TagLib.File.Create(new FileAbstraction(picketFileName, streamR));
+                var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2);
+
+                if (tags != null)
                 {
-                    TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+                    var realArtist = tags.AlbumArtists.Count() > 0 ? tags.AlbumArtists : tags.Performers;
 
-                    var tagFile = TagLib.File.Create(new FileAbstraction(picketFileName, streamR));
-                    var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2);
+                    txtSongTitle.Text = !string.IsNullOrEmpty(tags.Title) ? tags.Title : txtSongTitle.Text;
+                    txtArtist.Text = string.Join(", ", realArtist);
+                    txtAlbum.Text = !string.IsNullOrEmpty(tags.Album) ? tags.Album : txtAlbum.Text;
+                    txtTrackNo.Text = !string.IsNullOrEmpty(tags.Track.ToString()) ? tags.Track.ToString() : txtTrackNo.Text;
+                    txtYear.Text = !string.IsNullOrEmpty(tags.Year.ToString()) ? tags.Year.ToString() : txtYear.Text;
+                    txtGenre.Text = string.Join(", ", tags.Genres);
 
-                    if (tags != null)
+                    if (tags.Pictures.Count() > 0)
                     {
-                        var realArtist = tags.AlbumArtists.Count() > 0 ? tags.AlbumArtists : tags.Performers;
+                        var cover = tags.Pictures.FirstOrDefault().Data.Data;
+                        Stream coverStream = new MemoryStream(cover);
 
-                        txtSongTitle.Text = !string.IsNullOrEmpty(tags.Title) ? tags.Title : txtSongTitle.Text;
-                        txtArtist.Text = string.Join(", ", realArtist);
-                        txtAlbum.Text = !string.IsNullOrEmpty(tags.Album) ? tags.Album : txtAlbum.Text;
-                        txtTrackNo.Text = !string.IsNullOrEmpty(tags.Track.ToString()) ? tags.Track.ToString() : txtTrackNo.Text;
-                        txtYear.Text = !string.IsNullOrEmpty(tags.Year.ToString()) ? tags.Year.ToString() : txtYear.Text;
-                        txtGenre.Text = string.Join(", ", tags.Genres);
-
-                        if (tags.Pictures.Count() > 0)
-                        {
-                            var cover = tags.Pictures.FirstOrDefault().Data.Data;
-                            Stream coverStream = new MemoryStream(cover);
-
-                            imgCoverArt.Source = ImageSource.FromStream(() => coverStream);
-                            coverStream.Dispose();
-                        }
+                        imgCoverArt.Source = ImageSource.FromStream(() => coverStream);
+                        //coverStream.Dispose();
                     }
                 }
+
+                //streamR.Dispose();
+                //}
             }
             catch (Exception ex)
             {
@@ -172,55 +175,65 @@ namespace mp3TaggerMusic
             {
                 var folder = await FileSystem.Current.GetFileFromPathAsync(picketFilePath);
 
-                using (streamR = await folder.OpenAsync(FileAccess.ReadAndWrite))
-                {
+                streamR.Dispose();
+
+                //using (
+                streamR = await folder.OpenAsync(FileAccess.ReadAndWrite);//)
+                //{
                     TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
 
-                    using (var tagFile = TagLib.File.Create(new FileAbstraction(picketFileName, streamR)/*TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW)*/))
+                using (var tagFile = TagLib.File.Create(new FileAbstraction(picketFileName, streamR)/*TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW)*/))
+                {
+                    var tags = tagFile.Tag;
+
+                    string[] realArtist = new string[] { };
+                    string[] realGenres = new string[] { };
+                    if (!string.IsNullOrEmpty(txtArtist.Text))
                     {
-                        var tags = tagFile.Tag;
+                        var sp = txtArtist.Text.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-                        string[] realArtist = new string[] { };
-                        string[] realGenres = new string[] { };
-                        if (!string.IsNullOrEmpty(txtArtist.Text))
+                        if (sp.Count() > 0)
                         {
-                            var sp = txtArtist.Text.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                            if (sp.Count() > 0)
-                            {
-                                realArtist = sp;
-                            }
+                            realArtist = sp;
                         }
-
-                        if (!string.IsNullOrEmpty(txtGenre.Text))
-                        {
-                            var sp = txtGenre.Text.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                            if (sp.Count() > 0)
-                            {
-                                realGenres = sp;
-                            }
-                        }
-
-
-                        tags.Title = txtSongTitle.Text.FullTrimText();
-                        tags.Performers = realArtist;
-                        tags.AlbumArtists = realArtist;
-                        tags.Album = txtAlbum.Text.FullTrimText();
-                        tags.Track = txtTrackNo.Text.ToUInt();
-                        tags.Year = txtYear.Text.ToUInt();
-                        tags.Genres = realGenres;
-
-                        if (changedCover)
-                        {
-                            Stream coverStream = new MemoryStream(changedCoverImg);
-                            var tagCover = new TagLib.StreamFileAbstraction("hola", coverStream, coverStream);
-                            tagFile.Tag.Pictures = new[] { new TagLib.Picture(tagCover) };
-                            coverStream.Dispose();
-                        }
-                        tagFile.Save();
-                        tagFile.Dispose();
                     }
+
+                    if (!string.IsNullOrEmpty(txtGenre.Text))
+                    {
+                        var sp = txtGenre.Text.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        if (sp.Count() > 0)
+                        {
+                            realGenres = sp;
+                        }
+                    }
+
+
+                    tags.Title = txtSongTitle.Text.FullTrimText();
+                    tags.Performers = realArtist;
+                    tags.AlbumArtists = realArtist;
+                    tags.Album = txtAlbum.Text.FullTrimText();
+                    tags.Track = txtTrackNo.Text.ToUInt();
+                    tags.Year = txtYear.Text.ToUInt();
+                    tags.Genres = realGenres;
+
+                    if (changedCover)
+                    {
+                        Stream coverStream = new MemoryStream(changedCoverImg);
+                        var tagCover = new TagLib.StreamFileAbstraction("hola", coverStream, coverStream);
+                        tagFile.Tag.Pictures = new[] { new TagLib.Picture(tagCover) };
+                        coverStream.Dispose();
+                    }
+                    tagFile.Save();
+                    tagFile.Dispose();
+                    //}
+
+                    //AQUI SETIAR UN VARIABLE PARA DECIR QUE REFRESQUE EL LISTVIEW
+                    await Navigation.PopAsync();
+
+                    //OnBackButtonPressed();
+
+                    
                 }
             }
             catch (Exception ex)
@@ -345,6 +358,15 @@ namespace mp3TaggerMusic
 
                 throw;
             }
+        }
+
+
+        // hardware back button
+        protected override bool OnBackButtonPressed()
+        {
+            streamR.Dispose();
+            base.OnBackButtonPressed();
+            return false;
         }
     }
 }
