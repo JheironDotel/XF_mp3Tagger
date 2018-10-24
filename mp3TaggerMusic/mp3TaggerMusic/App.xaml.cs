@@ -24,6 +24,9 @@ namespace mp3TaggerMusic
             set { Properties[OnlyCompleteMissingInfoKey] = value; }
         }
 
+
+        public static bool Global_refreshListSong { get; set; }
+
         public App()
         {
             InitializeComponent();

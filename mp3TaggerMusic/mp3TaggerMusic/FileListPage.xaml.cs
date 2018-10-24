@@ -24,7 +24,7 @@ namespace mp3TaggerMusic
     {
         private bool wasLoad = false;
         private bool wasChecked = false;
-
+        
         public FileListPage()
         {
             InitializeComponent();
@@ -71,8 +71,7 @@ namespace mp3TaggerMusic
             }
             return sfd;
         }
-
-
+        
         protected override async void OnAppearing()
         {
             base.OnAppearing();
@@ -82,15 +81,22 @@ namespace mp3TaggerMusic
             //AQUI RECIBO LA VARIABLE QUE SETIE Y SI ES TRUE SETEO "wasLoad" COMO FALSO PARA QUE
             //SE REFRESQUE EL LISTVIEWE, SINO LLAMO AL METODO REFRESH Y YA
 
-            if (!wasLoad)
+            //if (App.refreshListSong)
+            //{
+            //    lvTracksFiles.Refreshing += lvTracksFiles_Refreshing;
+            //    App.refreshListSong = false;
+            //}
+
+            if (!wasLoad || App.Global_refreshListSong)
             {
                 lvTracksFiles.ItemsSource = await getAllSongFiles();
+                App.Global_refreshListSong = false;
             }
 
             Utility.Hide();
 
         }
-
+        
         private async void btnFileSel_Clicked(object sender, EventArgs e)
         {
             var pickedFile = await CrossFilePicker.Current.PickFile();

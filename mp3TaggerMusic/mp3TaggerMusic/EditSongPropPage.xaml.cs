@@ -140,11 +140,11 @@ namespace mp3TaggerMusic
                     var realArtist = tags.AlbumArtists.Count() > 0 ? tags.AlbumArtists : tags.Performers;
 
                     txtSongTitle.Text = !string.IsNullOrEmpty(tags.Title) ? tags.Title : txtSongTitle.Text;
-                    txtArtist.Text = string.Join(", ", realArtist);
+                    txtArtist.Text = string.Join(",", realArtist.Select(x => x.TrimStart().TrimEnd()));
                     txtAlbum.Text = !string.IsNullOrEmpty(tags.Album) ? tags.Album : txtAlbum.Text;
                     txtTrackNo.Text = !string.IsNullOrEmpty(tags.Track.ToString()) ? tags.Track.ToString() : txtTrackNo.Text;
                     txtYear.Text = !string.IsNullOrEmpty(tags.Year.ToString()) ? tags.Year.ToString() : txtYear.Text;
-                    txtGenre.Text = string.Join(", ", tags.Genres);
+                    txtGenre.Text = string.Join(",", tags.Genres.Select(x => x.TrimStart().TrimEnd()));
 
                     if (tags.Pictures.Count() > 0)
                     {
@@ -179,8 +179,8 @@ namespace mp3TaggerMusic
 
                 //using (
                 streamR = await folder.OpenAsync(FileAccess.ReadAndWrite);//)
-                //{
-                    TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+                                                                          //{
+                TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
 
                 using (var tagFile = TagLib.File.Create(new FileAbstraction(picketFileName, streamR)/*TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW)*/))
                 {
@@ -210,12 +210,12 @@ namespace mp3TaggerMusic
 
 
                     tags.Title = txtSongTitle.Text.FullTrimText();
-                    tags.Performers = realArtist;
-                    tags.AlbumArtists = realArtist;
+                    tags.Performers = realArtist.Select(x => x.TrimStart().TrimEnd()).ToArray();
+                    tags.AlbumArtists = realArtist.Select(x => x.TrimStart().TrimEnd()).ToArray();
                     tags.Album = txtAlbum.Text.FullTrimText();
                     tags.Track = txtTrackNo.Text.ToUInt();
                     tags.Year = txtYear.Text.ToUInt();
-                    tags.Genres = realGenres;
+                    tags.Genres = realGenres.Select(x => x.TrimStart().TrimEnd()).ToArray();
 
                     if (changedCover)
                     {
@@ -226,14 +226,14 @@ namespace mp3TaggerMusic
                     }
                     tagFile.Save();
                     tagFile.Dispose();
+                    streamR.Dispose();
                     //}
 
                     //AQUI SETIAR UN VARIABLE PARA DECIR QUE REFRESQUE EL LISTVIEW
+                    App.Global_refreshListSong = true;
                     await Navigation.PopAsync();
 
                     //OnBackButtonPressed();
-
-                    
                 }
             }
             catch (Exception ex)
