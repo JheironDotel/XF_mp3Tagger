@@ -18,7 +18,8 @@ namespace mp3TaggerMusic.CustomCode
         public static string audioDbApiKey = "195068";
         //public static string lastfmUrl = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key={0}&artist={1}&track={2}&format=json";
         public static string lastfmUrl = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key={0}&{1}{2}&format=json";
-        public static string audioDbUrl = "http://www.theaudiodb.com/api/v1/json/{0}/searchtrack.php?{1}{2}";
+        public static string audioDbUrlTrackInfo = "http://www.theaudiodb.com/api/v1/json/{0}/searchtrack.php?{1}{2}";
+        public static string audioDbUrlAlbumInfo = "http://www.theaudiodb.com/api/v1/json/{0}/album.php?m={1}";
 
 
         public static string[] imgExtensionList = new[]
@@ -73,48 +74,83 @@ namespace mp3TaggerMusic.CustomCode
             }
         }
 
-        public static async Task<SongInfoAudioDB.SongObject> getSongDataInfo_AudioDB(string songTitle = "", string songArtist = "")
+        public static async Task<List<SongInfoAudioDB.RealSongInfo>> getSongDataInfo_AudioDB(string songTitle = "", string songArtist = "")
         {
-            using (System.Net.Http.HttpClient _client = new System.Net.Http.HttpClient())
+            var realSongData = new List<SongInfoAudioDB.RealSongInfo>();
+            try
             {
-                string realUrl = "";
-                string realSongArtist = "";
-                string realSongTitle = "";
-
-                //http://www.theaudiodb.com/api/v1/json/195068/searchtrack.php?s=atreyu&t=the_theft
-
-                if (!string.IsNullOrEmpty(songTitle) && !string.IsNullOrEmpty(songArtist))
+                using (System.Net.Http.HttpClient _client = new System.Net.Http.HttpClient())
                 {
-                    realSongArtist = string.Format("s={0}", System.Net.WebUtility.UrlEncode(songArtist));
-                    realSongTitle = string.Format("&t={0}", System.Net.WebUtility.UrlEncode(songTitle));
+                    string realUrl = "";
+                    string realSongArtist = "";
+                    string realSongTitle = "";
 
-                    realUrl = string.Format(audioDbUrl, audioDbApiKey, realSongArtist, realSongTitle);
+                    //http://www.theaudiodb.com/api/v1/json/195068/searchtrack.php?s=atreyu&t=the_theft
+                    //http://www.theaudiodb.com/api/v1/json/195068/album.php?m=2122786                
+
+                    if (!string.IsNullOrEmpty(songTitle) && !string.IsNullOrEmpty(songArtist))
+                    {
+                        realSongArtist = string.Format("s={0}", System.Net.WebUtility.UrlEncode(songArtist));
+                        realSongTitle = string.Format("&t={0}", System.Net.WebUtility.UrlEncode(songTitle));
+
+                        realUrl = string.Format(audioDbUrlTrackInfo, audioDbApiKey, realSongArtist, realSongTitle);
+                    }
+                    else if (!string.IsNullOrEmpty(songTitle))
+                    {
+                        realSongTitle = string.Format("t={0}", System.Net.WebUtility.UrlEncode(songTitle));
+
+                        realUrl = string.Format(audioDbUrlTrackInfo, audioDbApiKey, realSongTitle, "");
+                    }
+                    else if (!string.IsNullOrEmpty(songArtist))
+                    {
+                        realSongArtist = string.Format("s={0}", System.Net.WebUtility.UrlEncode(songArtist));
+                        realUrl = string.Format(audioDbUrlTrackInfo, audioDbApiKey, songArtist);
+                    }
+
+                    var content = await _client.GetStringAsync(realUrl);
+
+                    var songData = Newtonsoft.Json.JsonConvert.DeserializeObject<SongInfoAudioDB.SongObject>(content);
+
+
+                    string albumCover = "";
+                    string albumYear = "";
+                    if (songData.track.FirstOrDefault() != null && !songData.track.FirstOrDefault().idAlbum.MyStringIsNullOrEmpty())
+                    {
+                        foreach (var sinfo in songData.track)
+                        {
+                            var albumid = sinfo.idAlbum;
+
+                            realUrl = string.Format(audioDbUrlAlbumInfo, audioDbApiKey, albumid);
+                            content = await _client.GetStringAsync(realUrl);
+
+                            var albumData = Newtonsoft.Json.JsonConvert.DeserializeObject<SongInfoAudioDB.SongAlbumObject>(content);
+
+                            foreach (var ainfo in albumData.album)
+                            {
+                                albumCover = ainfo.strAlbumThumb;
+                                albumYear = ainfo.intYearReleased;
+                            }
+
+                            realSongData.Add(new SongInfoAudioDB.RealSongInfo()
+                            {
+                                songName = sinfo.strTrack,
+                                songArtist = sinfo.strArtist,
+                                albumName = sinfo.strAlbum,
+                                songGenre = sinfo.strGenre,
+                                songTrackNumber = sinfo.intTrackNumber,
+
+                                albumYearReleased = albumYear,
+                                AlbumCoverThumb = albumCover
+                            });
+                        }
+                    }
                 }
-                else if (!string.IsNullOrEmpty(songTitle))
-                {
-                    realSongTitle = string.Format("t={0}", System.Net.WebUtility.UrlEncode(songTitle));
-
-                    realUrl = string.Format(audioDbUrl, audioDbApiKey, realSongTitle);
-                }
-                else if (!string.IsNullOrEmpty(songArtist))
-                {
-                    realSongArtist = string.Format("s={0}", System.Net.WebUtility.UrlEncode(songArtist));
-                    realUrl = string.Format(audioDbUrl, audioDbApiKey, songArtist);
-                }
-
-                var content = await _client.GetStringAsync(realUrl);
-
-                var songData = Newtonsoft.Json.JsonConvert.DeserializeObject<SongInfoAudioDB.SongObject>(content);
-
-
-                return songData;
-
-                //var posts = JsonConvert.DeserializeObject<List<Post>>(content);
-                //_posts = new ObservableCollection<Post>(posts);
-                //postsListView.ItemsSource = _posts;
             }
+            catch (Exception ex)
+            {
+            }
+            return realSongData;
         }
-
 
         public static void Show()
         {
@@ -158,7 +194,7 @@ namespace mp3TaggerMusic.CustomCode
                     {
                         sfd.SongName = filename;
                     }
-                    
+
                     if (tags.Pictures.Count() > 0)
                     {
                         var cover = tags.Pictures.FirstOrDefault().Data.Data;

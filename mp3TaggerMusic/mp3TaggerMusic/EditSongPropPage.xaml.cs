@@ -139,11 +139,11 @@ namespace mp3TaggerMusic
                 {
                     var realArtist = tags.AlbumArtists.Count() > 0 ? tags.AlbumArtists : tags.Performers;
 
-                    txtSongTitle.Text = !string.IsNullOrEmpty(tags.Title) ? tags.Title : txtSongTitle.Text;
+                    txtSongTitle.Text = !string.IsNullOrEmpty(tags.Title) ? tags.Title : picketFileName;
                     txtArtist.Text = string.Join(",", realArtist.Select(x => x.TrimStart().TrimEnd()));
-                    txtAlbum.Text = !string.IsNullOrEmpty(tags.Album) ? tags.Album : txtAlbum.Text;
-                    txtTrackNo.Text = !string.IsNullOrEmpty(tags.Track.ToString()) ? tags.Track.ToString() : txtTrackNo.Text;
-                    txtYear.Text = !string.IsNullOrEmpty(tags.Year.ToString()) ? tags.Year.ToString() : txtYear.Text;
+                    txtAlbum.Text = !string.IsNullOrEmpty(tags.Album) ? tags.Album : "";
+                    txtTrackNo.Text = !string.IsNullOrEmpty(tags.Track.ToString()) ? tags.Track.ToString() : "";
+                    txtYear.Text = !string.IsNullOrEmpty(tags.Year.ToString()) ? tags.Year.ToString() : "";
                     txtGenre.Text = string.Join(",", tags.Genres.Select(x => x.TrimStart().TrimEnd()));
 
                     if (tags.Pictures.Count() > 0)
@@ -152,7 +152,7 @@ namespace mp3TaggerMusic
                         Stream coverStream = new MemoryStream(cover);
 
                         imgCoverArt.Source = ImageSource.FromStream(() => coverStream);
-                        //coverStream.Dispose();
+                        coverStream.Dispose();
                     }
                 }
 
@@ -311,7 +311,8 @@ namespace mp3TaggerMusic
 
                 var app = Application.Current as App;
                 bool _onlyCompleteMissingInfo = app.OnlyCompleteMissingInfo;
-                SongInfoAudioDB.SongObject result = null;
+                //SongInfoAudioDB.SongObject result = null;
+                List<SongInfoAudioDB.RealSongInfo> result = null;
 
                 if (_onlyCompleteMissingInfo)
                 {
@@ -337,14 +338,22 @@ namespace mp3TaggerMusic
                     //Actualizo toda la informaciones
                 }
 
-                if (result != null && result.track != null)
+                if (result.Count() > 0)
                 {
-                    txtArtist.Text = result.track.FirstOrDefault().strArtist;
-                    txtAlbum.Text = result.track.FirstOrDefault().strAlbum;
-                    txtGenre.Text = result.track.FirstOrDefault().strGenre;
+                    //SI VIENEN MAS DE UNA CANCION MOSTRAR UN LISTADO DE DICHAS CANCIONES CON SU CARATULA NOMBRE Y ARTISTA
 
+                    txtArtist.Text = result.FirstOrDefault().songArtist;
+                    txtAlbum.Text = result.FirstOrDefault().albumName;
+                    txtGenre.Text = result.FirstOrDefault().songGenre;
+                    txtYear.Text = result.FirstOrDefault().albumYearReleased;
+                    txtTrackNo.Text = result.FirstOrDefault().songTrackNumber;
+                    txtSongTitle.Text = result.FirstOrDefault().songName;
+
+                    //HACER EL PROCESO DE DESCARGAR LA CARATULA DEL ALBUYM
 
                     Utility.Hide();
+
+
                 }
                 else
                 {
