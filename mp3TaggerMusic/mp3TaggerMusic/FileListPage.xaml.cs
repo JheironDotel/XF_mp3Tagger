@@ -33,7 +33,7 @@ namespace mp3TaggerMusic
             if (!hasConnection)
             {
                 btnAutoComplete.Image = "autocomplete_ot_dis.png";
-            }
+            } 
             else
             {
                 btnAutoComplete.Image = "autocomplete_o.png";
