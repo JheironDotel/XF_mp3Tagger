@@ -30,7 +30,7 @@
                 <Image Source="musicnote.png" />
                 <Entry x:Name="txtSongTitle" Text="Song Title" HorizontalOptions="FillAndExpand"/>
             </StackLayout>
-
+ 
             <StackLayout Orientation="Horizontal" Padding="21,0" HorizontalOptions="FillAndExpand">
                 <Label Text="Artist"/>
             </StackLayout>

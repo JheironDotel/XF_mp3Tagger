@@ -1,22 +1,16 @@
 Mp3Tagger:
     Task:
-        ✔ Donde se ve la imagen de la caraturla hacer que cuando le den click te mande a buscar alguna imagen por si uno quiere ponerle su propia caratula @done (2018-6-2 10:44:32)
-        ✔ Validar que sean imagenes los que se busquen cuando se haga lo de arriba @done (2018-6-2 10:44:35)
-        ✔ Validar que solo sean archivos de musica a modificar los datos @done (2018-6-2 10:44:37)        
-        ✔ poner el menu de settin y agregar propiedad que guarde si la paersona quiere reemplazar toda la informacion o solo poner la informacion que esta vacia @done (2018-6-5 10:35:03)
-        ✔ poner un loading cuando se este buscando la informacion de X cancion @done (24/7/2018 16:06:56)
-            https://www.youtube.com/watch?v=k0VNjuhhE-w
-        ✔ listar todos los archivos de audio en el dispositivo y mostrarlos en un listview (nombre,ubicacion) @high @critical @done (25/7/2018 16:23:14)
-        ☐ hacer logica para arreglar el nombre de las canciones (si no tiene el titulo en los metadatos entonces cojerlo del nombre que tiene el archivo y hacerle su respectivo tratamiento) @high @critical 
-        ✔ poner tabbed pages uno con el la opcion para buscar una cancion en especifico y otra con la opcion de buscar todas las canciones del celular @high @critical @done (25/7/2018 16:23:21)
-        ✔ cuando seleccionen el tabbed pages con la opcion de buscar todas la canciones notificarle al usuario de que se buscaran todos los archivos de audio del celular y poner un loading en lo que ese proceso se ejecuta @high @done (25/7/2018 16:23:28)
-        ✔ preguntar si el dispositivo tienen internet, si no tiene entonces desactivar el boton de autocompletar y si clickean en el que notifique que debe estar conectado a internet @high @critical @done (24/7/2018 17:39:27)
-        ☐ si viene mas de una cancion en el resultado para buscar la metadata, mostrarla en una pantallita para que el usuario seleccione la coincidencia @high @critical 
-        ✔ revisar un error que da cuando se intenta seleccionar el archivo varias veces seguidas @critical @done (25/7/2018 9:23:39)
+        ☐ poner que la caratula venga de internet o local, si quieren buscar la imagen en internet poner pooner un view que venga con el listado de imagenes (tener pendiente que se debe tener al menos el nombre de la cancion para buscar la caratula en internet) @high
+        ☐ hacer logica para arreglar el nombre de las canciones (si no tiene el titulo en los metadatos entonces cojerlo del nombre que tiene el archivo y hacerle su respectivo tratamiento) @high @critical
+        ☐ si viene mas de una cancion en el resultado para buscar la metadata, mostrarla en una pantallita para que el usuario seleccione la coincidencia @high @critical         
         ☐ cuando modifiquen una cancion retornar a la opcion y refrescar listview @high 
         ☐ hacer el proceso de completar canciones automaticamente @critical 
         ☐ Tener pendiente que del android 6.0 en adelante debo preguntar por los permisos (internet etc) @critical 
             https://github.com/jamesmontemagno/PermissionsPlugin
+       
+
+        
+
 
 
 NOTA: Flujo app con los tabs
@@ -29,8 +23,19 @@ el primer tab se llamara Song listara todas las canciones del dispositivo
         
 el segunto tab sera Cancion y se buscara un archivo en especifico, teniendo un boton de buscar y el flujo normal de busqueda
 
-
-
+terminadas:
+    ✔ Donde se ve la imagen de la caraturla hacer que cuando le den click te mande a buscar alguna imagen por si uno quiere ponerle su propia caratula @done (2018-6-2 10:44:32)
+        ✔ Validar que sean imagenes los que se busquen cuando se haga lo de arriba @done (2018-6-2 10:44:35)
+        ✔ Validar que solo sean archivos de musica a modificar los datos @done (2018-6-2 10:44:37)        
+        ✔ poner el menu de settin y agregar propiedad que guarde si la paersona quiere reemplazar toda la informacion o solo poner la informacion que esta vacia @done (2018-6-5 10:35:03)
+        ✔ poner un loading cuando se este buscando la informacion de X cancion @done (24/7/2018 16:06:56)
+        https://www.youtube.com/watch?v=k0VNjuhhE-w
+        ✔ listar todos los archivos de audio en el dispositivo y mostrarlos en un listview (nombre,ubicacion) @high @critical @done (25/7/2018 16:23:14)
+        ✔ poner tabbed pages uno con el la opcion para buscar una cancion en especifico y otra con la opcion de buscar todas las canciones del celular @high @critical @done (25/7/2018 16:23:21)
+        ✔ cuando seleccionen el tabbed pages con la opcion de buscar todas la canciones notificarle al usuario de que se buscaran todos los archivos de audio del celular y poner un loading en lo que ese proceso se ejecuta @high @done (25/7/2018 16:23:28)
+        ✔ preguntar si el dispositivo tienen internet, si no tiene entonces desactivar el boton de auto
+        ✔ revisar un error que da cuando se intenta seleccionar el archivo varias veces seguidas @critical @done (25/7/2018 9:23:39)
+        completar y si clickean en el que notifique que debe estar conectado a internet @high @critical @done (24/7/2018 17:39:27)
 
 
 cd C:\Program Files (x86)\Android\android-sdk\platform-tools

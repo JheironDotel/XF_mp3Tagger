@@ -38,6 +38,9 @@ namespace mp3TaggerMusic
         }
 
 
+      
+
+
         private async void ToolbarItem_Activated(object sender, EventArgs e)
         {
             ToolbarItem tbi = (ToolbarItem)sender;
@@ -46,7 +49,7 @@ namespace mp3TaggerMusic
                 case "Settings":
                     var page = new SettingsPage();
                     await Navigation.PushAsync(page);
-                    break;               
+                    break;
                 default:
                     break;
             }
