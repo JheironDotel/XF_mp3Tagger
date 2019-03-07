@@ -6,9 +6,13 @@ Mp3Tagger:
 
         (Pendiente) si viene mas de una cancion en el resultado para buscar la metadata, mostrarla en una pantallita para que el usuario seleccione la coincidencia
 
-        (Pendiente) cuando modifiquen una cancion retornar a la opcion y refrescar listview 
-        
+        (Listo) cuando modifiquen una cancion retornar a la opcion y refrescar listview 
+
         (Pendiente) hacer el proceso de completar canciones automaticamente
+
+        (Pendiente) agregar un buscador para que busque x cancion en el listview
+
+        (Pendiente) Multi-idioma
 
         (Listo) Tener pendiente que del android 6.0 en adelante debo preguntar por los permisos (internet etc) @critical 
             https://github.com/jamesmontemagno/PermissionsPlugin

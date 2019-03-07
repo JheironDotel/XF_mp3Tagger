@@ -7,6 +7,8 @@ using Xamarin.Forms.Xaml;
 using mp3TaggerMusic.Models;
 using Plugin.FilePicker;
 using mp3TaggerMusic.CustomCode;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 
 namespace mp3TaggerMusic
 {
@@ -15,6 +17,7 @@ namespace mp3TaggerMusic
     {
         private bool wasLoad = false;
         private bool wasChecked = false;
+        private List<SongFilesData> allData;
 
         public FileListPage()
         {
@@ -50,7 +53,8 @@ namespace mp3TaggerMusic
                             AlbumName = infoSong.AlbumName,
                             AlbumCover = infoSong.AlbumCover,
                             SongFilePath = infoSong.SongFilePath,
-                            Selected = isChecked
+                            Selected = isChecked,
+                            SongNameLower = infoSong.SongName.ToLower()
                         });
                     }
                 }
@@ -65,22 +69,22 @@ namespace mp3TaggerMusic
 
         protected override async void OnAppearing()
         {
-            base.OnAppearing();           
+            base.OnAppearing();
+
+            CheckStoragePermissions();
 
             Utility.Show();
 
-            //AQUI RECIBO LA VARIABLE QUE SETIE Y SI ES TRUE SETEO "wasLoad" COMO FALSO PARA QUE
-            //SE REFRESQUE EL LISTVIEWE, SINO LLAMO AL METODO REFRESH Y YA
-
-            //if (App.refreshListSong)
-            //{
-            //    lvTracksFiles.Refreshing += lvTracksFiles_Refreshing;
-            //    App.refreshListSong = false;
-            //}
-
-            if (!wasLoad || App.Global_refreshListSong)
+            if (!wasLoad)
             {
-                lvTracksFiles.ItemsSource = await getAllSongFiles();
+                allData = await getAllSongFiles();
+                lvTracksFiles.ItemsSource = allData;
+            }
+            else if (App.Global_refreshListSong)
+            {
+                allData = await getAllSongFiles();
+
+                lvTracksFiles.ItemsSource = allData;//await getAllSongFiles();
                 App.Global_refreshListSong = false;
             }
 
@@ -156,6 +160,13 @@ namespace mp3TaggerMusic
                 Utility.Show();
 
                 var songfilesdata = e.Item as SongFilesData;
+                if (songfilesdata == null)
+                {
+                    if (e.Item != null)
+                    {
+                        //songfilesdata = e.Item;
+                    }
+                }
                 if (songfilesdata != null)
                 {
                     await Navigation.PushAsync(new EditSongPropPage(null, songfilesdata.SongFilePath));
@@ -164,15 +175,13 @@ namespace mp3TaggerMusic
                 {
                     await DisplayAlert("Advertencia", "Debe seleccionar una cancion", "Ok");
                 }
-            ((ListView)sender).SelectedItem = null;
+
+                ((ListView)sender).SelectedItem = null;
 
                 Utility.Hide();
-
-
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
@@ -204,7 +213,84 @@ namespace mp3TaggerMusic
                 await DisplayAlert("Advertencia", "Debe seleccionar al menos una cancion.", "Ok");
             }
         }
-              
-                
+
+        public async void CheckStoragePermissions()
+        {
+            string message = "";
+            try
+            {
+                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Storage);
+                if (status != PermissionStatus.Granted)
+                {
+                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage))
+                    {
+                        message = "Se necesita poder leer y escribir en los archivos para ubicar los archivos de audio compatibles y poder modificarles las informaciones";
+                        await DisplayAlert("Lectura y Escritura", message, "OK");
+                    }
+
+                    var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Storage);
+                    //Best practice to always check that the key exists
+                    if (results.ContainsKey(Permission.Storage))
+                        status = results[Permission.Storage];
+                }
+
+                if (status == PermissionStatus.Granted)
+                {
+                    //aqui por si quiero hacer alguna llamada en especficico
+                    //var results = await mi metodo/funcion                    
+                }
+                else if (status != PermissionStatus.Unknown)
+                {
+                    message = "Estos permisos son importantes para el funciomiento de la aplicacion, se cerrara la aplicacion";
+                    await DisplayAlert("Lectura y Escritura Denegada", message, "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "OK");
+            }
+        }
+
+        private async void ToolbarItem_Activated(object sender, EventArgs e)
+        {
+            ToolbarItem tbi = (ToolbarItem)sender;
+            switch (tbi.Text)
+            {
+                case "Settings":
+                    var page = new SettingsPage();
+                    await Navigation.PushAsync(page);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private async void sbTracks_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //lvTracksFiles.BeginRefresh();
+            //thats all you need to make a search  
+            if (string.IsNullOrEmpty(e.NewTextValue))
+            {
+                lvTracksFiles.ItemsSource = await getAllSongFiles();
+            }
+            else            
+            {
+                var search = from a in allData
+                             where a.SongNameLower.Contains(e.NewTextValue.ToLower())
+                             select //a;
+                             new
+                             {
+                                 SongFilePath= a.SongFilePath,
+                                 SongName=a.SongName,
+                                 ArtistName = a.ArtistName,
+                                 Selected = a.Selected,
+                                 //a.AlbumCover
+                             };
+
+
+                lvTracksFiles.ItemsSource = search; //allData.Where(x => x.SongNameLower.StartsWith(e.NewTextValue.ToLower()));
+                //lvTracksFiles.EndRefresh();
+            }
+        }
     }
 }

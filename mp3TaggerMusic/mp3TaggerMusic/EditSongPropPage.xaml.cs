@@ -131,10 +131,9 @@ namespace mp3TaggerMusic
                 streamR = new MemoryStream();
 
                 var folder = await FileSystem.Current.GetFileFromPathAsync(FilePath);
-
-                //using (
+                
                 streamR = await folder.OpenAsync(FileAccess.Read);
-                                                                                  
+
                 TagLib.Id3v2.Tag.DefaultVersion = 3;
                 TagLib.Id3v2.Tag.ForceDefaultVersion = true;
 
@@ -158,7 +157,6 @@ namespace mp3TaggerMusic
                         Stream coverStream = new MemoryStream(cover);
 
                         imgCoverArt.Source = ImageSource.FromStream(() => coverStream);
-                        coverStream.Dispose();
                     }
                 }
             }
@@ -168,7 +166,6 @@ namespace mp3TaggerMusic
 
                 string msj = string.Format("Ha ocurrido un error: {0}", ex);
                 await DisplayAlert("Error", msj, "Ok");
-
             }
         }
 
@@ -307,7 +304,6 @@ namespace mp3TaggerMusic
                 }
 
 
-
                 var app = Application.Current as App;
                 bool _onlyCompleteMissingInfo = app.OnlyCompleteMissingInfo;
                 //SongInfoAudioDB.SongObject result = null;
@@ -367,7 +363,6 @@ namespace mp3TaggerMusic
                 throw;
             }
         }
-
 
         // hardware back button
         protected override bool OnBackButtonPressed()

@@ -166,52 +166,53 @@ namespace mp3TaggerMusic.CustomCode
 
         public static async Task<SongFilesData> BasicInfoSong(string filePath)
         {
-            var folder = await PCLStorage.FileSystem.Current.GetFileFromPathAsync(filePath);
-
+            SongFilesData sfd = new SongFilesData();
             Stream streamR = new MemoryStream();
 
-            SongFilesData sfd = new SongFilesData();
+            var folder = await PCLStorage.FileSystem.Current.GetFileFromPathAsync(filePath);
+
             var filename = Path.GetFileName(filePath);
 
-            using (streamR = await folder.OpenAsync(PCLStorage.FileAccess.Read))
+            //using (
+            streamR = await folder.OpenAsync(PCLStorage.FileAccess.Read);//)
+                                                                         //{
+            TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+
+            var tagFile = TagLib.File.Create(new FileAbstraction(filePath, streamR));
+            var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2);
+
+            if (tags != null)
             {
-                TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+                var realArtist = tags.AlbumArtists.Count() > 0 ? tags.AlbumArtists : tags.Performers;
 
-                var tagFile = TagLib.File.Create(new FileAbstraction(filePath, streamR));
-                var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2);
+                sfd.AlbumName = tags.Album;
+                sfd.ArtistName = string.Join(", ", realArtist);
+                sfd.SongFilePath = filePath;
 
-                if (tags != null)
+                if (!string.IsNullOrEmpty(tags.Title))
                 {
-                    var realArtist = tags.AlbumArtists.Count() > 0 ? tags.AlbumArtists : tags.Performers;
+                    sfd.SongName = tags.Title;
+                }
+                else
+                {
+                    sfd.SongName = filename;
+                }
 
-                    sfd.AlbumName = tags.Album;
-                    sfd.ArtistName = string.Join(", ", realArtist);
-                    sfd.SongFilePath = filePath;
-
-                    if (!string.IsNullOrEmpty(tags.Title))
-                    {
-                        sfd.SongName = tags.Title;
-                    }
-                    else
-                    {
-                        sfd.SongName = filename;
-                    }
-
-                    if (tags.Pictures.Count() > 0)
-                    {
-                        var cover = tags.Pictures.FirstOrDefault().Data.Data;
-                        Stream coverStream = new MemoryStream(cover);
-
-                        sfd.AlbumCover = ImageSource.FromStream(() => coverStream);
-                    }
-                    else
-                    {
-                        var imgSource = ImageSource.FromFile("coverart.png");
-                        sfd.AlbumCover = imgSource;
-                    }
+                if (tags.Pictures.Count() > 0)
+                {
+                    var cover = tags.Pictures.FirstOrDefault().Data.Data;
+                    Stream coverStream = new MemoryStream(cover);
+                    sfd.AlbumCover = ImageSource.FromStream(() => coverStream);                    
+                }
+                else
+                {
+                    var imgSource = ImageSource.FromFile("coverart.png");
+                    sfd.AlbumCover = imgSource;
                 }
             }
+            //}
 
+            //streamR.Dispose();
             return sfd;
         }
 
@@ -219,42 +220,6 @@ namespace mp3TaggerMusic.CustomCode
         {
             return DependencyService.Get<Intefaces.IConnectivityChecker>().DeviceHasInternet();
         }
-
-        //public static async Task<Tuple<bool, string>> CheckPermissionStatusXF(Permission permissionToCheck)
-        //{
-        //    try
-        //    {
-        //        var status = await CrossPermissions.Current.CheckPermissionStatusAsync(permissionToCheck);
-        //        if (status != PermissionStatus.Granted)
-        //        {
-        //            if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(permissionToCheck))
-        //            {
-        //                //await DisplayAlert("Need location", "Gunna need that location", "OK");
-        //                await new Tuple<bool, string>();
-
-        //            }
-
-        //            var results = await CrossPermissions.Current.RequestPermissionsAsync(permissionToCheck);
-        //            //Best practice to always check that the key exists
-        //            if (results.ContainsKey(permissionToCheck))
-        //                status = results[permissionToCheck];
-        //        }
-
-        //        if (status == PermissionStatus.Granted)
-        //        {
-        //            var results = await CrossGeolocator.Current.GetPositionAsync(10000);
-        //            LabelGeolocation.Text = "Lat: " + results.Latitude + " Long: " + results.Longitude;
-        //        }
-        //        else if (status != PermissionStatus.Unknown)
-        //        {
-        //            await DisplayAlert("Location Denied", "Can not continue, try again.", "OK");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await DisplayAlert("Error", ex, "OK");
-        //    }
-        //}
     }
 
 }

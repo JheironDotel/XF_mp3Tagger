@@ -1,44 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="mp3TaggerMusic.FileListPage">
+             x:Class="mp3TaggerMusic.FileListPage"
+             Title="All Tracks">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Settings" Activated="ToolbarItem_Activated" Order="Secondary"></ToolbarItem>
+    </ContentPage.ToolbarItems>
 
-    <StackLayout>
+    <ContentPage.Content>
+        <StackLayout>
 
-        <!--<Button x:Name="btnFileSel" Clicked="btnFileSel_Clicked" Text="Selecionar Archivo de Audio"></Button>
-            <Button x:Name="btnFileSelPath" Clicked="btnFileSelPath_Clicked" Text="Selecionar Ubicacion Archivos de Audio"></Button>-->
-        <StackLayout Orientation="Horizontal" Padding="0" Spacing="6" HorizontalOptions="EndAndExpand">
-            <Button x:Name="btnCheckAll" Image="checkall_black.png" BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" Clicked="btnCheckAll_Clicked"></Button>
-            <Button x:Name="btnAutoComplete" Image="autocomplete_o.png" BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" Clicked="btnAutoComplete_Clicked"></Button>
-        </StackLayout>
+            <StackLayout Orientation="Horizontal" >
+                <SearchBar x:Name="sbTracks" TextChanged="sbTracks_TextChanged" Placeholder="Search..." WidthRequest="200" HorizontalOptions="StartAndExpand"></SearchBar>
+                <Button x:Name="btnCheckAll" Image="checkall_black.png" BackgroundColor="Transparent" Clicked="btnCheckAll_Clicked"></Button>
+                <Button x:Name="btnAutoComplete" Image="autocomplete_o.png" BackgroundColor="Transparent" Clicked="btnAutoComplete_Clicked"></Button>
+            </StackLayout>
 
-        <ListView x:Name="lvTracksFiles" SeparatorVisibility="Default" SeparatorColor="Blue" Refreshing="lvTracksFiles_Refreshing" IsPullToRefreshEnabled="True" ItemTapped="lvTracksFiles_ItemTapped">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackLayout Orientation="Horizontal" Margin="10,0,0,0" HorizontalOptions="FillAndExpand">
-                                <Image Source="{Binding AlbumCover}" HorizontalOptions="Start" />
-                            </StackLayout>
-                            <StackLayout VerticalOptions="CenterAndExpand" Margin="50,0,0,0">
-                                <Label Text="{Binding SongName}"  />
-                                <Label Text="{Binding ArtistName}" FontSize="10" />
-                            </StackLayout>
-                            <Switch IsToggled="{Binding Selected}" Grid.Column="1" />
-                        </Grid>
-                    </ViewCell>
+            <AbsoluteLayout>
+                <ListView x:Name="lvTracksFiles" CachingStrategy="RecycleElement" 
+                      SeparatorVisibility="Default" SeparatorColor="Blue" 
+                      Refreshing="lvTracksFiles_Refreshing" IsPullToRefreshEnabled="True" 
+                      ItemTapped="lvTracksFiles_ItemTapped">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <!--<ColumnDefinition Width="Auto" />-->
+                                    </Grid.ColumnDefinitions>
+                                    <StackLayout Orientation="Horizontal" Margin="10,0,0,0" HorizontalOptions="FillAndExpand">
+                                        <Image Source="{Binding AlbumCover}" HorizontalOptions="Start" />
+                                    </StackLayout>
+                                    <StackLayout VerticalOptions="CenterAndExpand" Margin="50,0,0,0">
+                                        <Label Text="{Binding SongName}"  />
+                                        <Label Text="{Binding ArtistName}" FontSize="10" />
+                                    </StackLayout>
+                                    <Switch IsToggled="{Binding Selected}" Grid.Column="1" />
+                                </Grid>
+                            </ViewCell>
 
 
-                    <!--<TextCell Text="{Binding NameFile}" Detail="{Binding Path}"/>-->
-                    <!--<ImageCell Text="{Binding SongName}" Detail="{Binding ArtistName}" ImageSource="{Binding AlbumCover}"/>
+                            <!--<TextCell Text="{Binding NameFile}" Detail="{Binding Path}"/>-->
+                            <!--<ImageCell Text="{Binding SongName}" Detail="{Binding ArtistName}" ImageSource="{Binding AlbumCover}"/>
                     <Switch IsToggled="{Binding Selected}" />-->
-                </DataTemplate>
-            </ListView.ItemTemplate>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
 
-        </ListView>
-    </StackLayout>
+                </ListView>
+            </AbsoluteLayout>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using Android.App;
 using Android.Content.PM;
@@ -27,6 +27,12 @@ namespace mp3TaggerMusic.Droid
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
+
+            var forceXamlOnlyTypeLoading = new[]
+            {
+                typeof(UXDivers.Effects.Effects),
+                typeof(UXDivers.Effects.Droid.CircleEffect)
+            };
 
             base.OnCreate(bundle);
 

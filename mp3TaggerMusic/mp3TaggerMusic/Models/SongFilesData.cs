@@ -14,5 +14,6 @@ namespace mp3TaggerMusic.Models
         public Xamarin.Forms.ImageSource AlbumCover { get; set; }
         public string SongFilePath { get; set; }
         public bool Selected { get; set; }
+        public string SongNameLower { get; set; }
     }
 }

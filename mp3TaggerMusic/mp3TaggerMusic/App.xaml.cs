@@ -36,8 +36,7 @@ namespace mp3TaggerMusic
             DependencyService.Register<IFileList>();
             DependencyService.Register<IConnectivityChecker>();
 
-            //MainPage = new NavigationPage(new MainPage());
-            MainPage = new NavigationPage(new MainTabbedPage());
+            MainPage = new NavigationPage(new FileListPage());
         }
 
         protected override void OnStart()
