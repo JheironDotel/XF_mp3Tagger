@@ -1,12 +1,19 @@
 Mp3Tagger:
     Task:
-        ☐ poner que la caratula venga de internet o local, si quieren buscar la imagen en internet poner pooner un view que venga con el listado de imagenes (tener pendiente que se debe tener al menos el nombre de la cancion para buscar la caratula en internet) @high
-        ☐ hacer logica para arreglar el nombre de las canciones (si no tiene el titulo en los metadatos entonces cojerlo del nombre que tiene el archivo y hacerle su respectivo tratamiento) @high @critical
-        ☐ si viene mas de una cancion en el resultado para buscar la metadata, mostrarla en una pantallita para que el usuario seleccione la coincidencia @high @critical         
-        ☐ cuando modifiquen una cancion retornar a la opcion y refrescar listview @high 
-        ☐ hacer el proceso de completar canciones automaticamente @critical 
-        ☐ Tener pendiente que del android 6.0 en adelante debo preguntar por los permisos (internet etc) @critical 
+        (Pendiente) poner que la caratula venga de internet o local, si quieren buscar la imagen en internet poner pooner un view que venga con el listado de imagenes (tener pendiente que se debe tener al menos el nombre de la cancion para buscar la caratula en internet)
+
+        (Pendiente) hacer logica para arreglar el nombre de las canciones (si no tiene el titulo en los metadatos entonces cojerlo del nombre que tiene el archivo y hacerle su respectivo tratamiento)
+
+        (Pendiente) si viene mas de una cancion en el resultado para buscar la metadata, mostrarla en una pantallita para que el usuario seleccione la coincidencia
+
+        (Pendiente) cuando modifiquen una cancion retornar a la opcion y refrescar listview 
+        
+        (Pendiente) hacer el proceso de completar canciones automaticamente
+
+        (Listo) Tener pendiente que del android 6.0 en adelante debo preguntar por los permisos (internet etc) @critical 
             https://github.com/jamesmontemagno/PermissionsPlugin
+        
+            
        
 
         

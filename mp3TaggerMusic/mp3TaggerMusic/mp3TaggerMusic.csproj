@@ -38,7 +38,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BasePage.cs" />
+    <Compile Include="BaseContentPage.cs" />
     <Compile Include="CustomCode\FileAbstraction .cs" />
     <Compile Include="CustomCode\Utility.cs" />
     <Compile Include="CustomCode\MethodsExtension.cs" />

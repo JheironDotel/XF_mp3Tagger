@@ -31,6 +31,11 @@ namespace mp3TaggerMusic
         {
             InitializeComponent();
 
+            if (streamR != null)
+            {
+                streamR.Dispose();
+            }
+
             if (pickedFile != null)
             {
                 _pickedFile = pickedFile;
@@ -128,9 +133,10 @@ namespace mp3TaggerMusic
                 var folder = await FileSystem.Current.GetFileFromPathAsync(FilePath);
 
                 //using (
-                streamR = await folder.OpenAsync(FileAccess.Read);//)
-                                                                  //{
-                TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
+                streamR = await folder.OpenAsync(FileAccess.Read);
+                                                                                  
+                TagLib.Id3v2.Tag.DefaultVersion = 3;
+                TagLib.Id3v2.Tag.ForceDefaultVersion = true;
 
                 var tagFile = TagLib.File.Create(new FileAbstraction(picketFileName, streamR));
                 var tags = tagFile.GetTag(TagLib.TagTypes.Id3v2);
@@ -155,9 +161,6 @@ namespace mp3TaggerMusic
                         coverStream.Dispose();
                     }
                 }
-
-                //streamR.Dispose();
-                //}
             }
             catch (Exception ex)
             {
@@ -177,9 +180,7 @@ namespace mp3TaggerMusic
 
                 streamR.Dispose();
 
-                //using (
-                streamR = await folder.OpenAsync(FileAccess.ReadAndWrite);//)
-                                                                          //{
+                streamR = await folder.OpenAsync(FileAccess.ReadAndWrite);
                 TagLib.Id3v2.Tag.DefaultVersion = 3; TagLib.Id3v2.Tag.ForceDefaultVersion = true;
 
                 using (var tagFile = TagLib.File.Create(new FileAbstraction(picketFileName, streamR)/*TagLib.File.Create(new TagLib.StreamFileAbstraction(name, streamR, streamW)*/))
@@ -208,7 +209,6 @@ namespace mp3TaggerMusic
                         }
                     }
 
-
                     tags.Title = txtSongTitle.Text.FullTrimText();
                     tags.Performers = realArtist.Select(x => x.TrimStart().TrimEnd()).ToArray();
                     tags.AlbumArtists = realArtist.Select(x => x.TrimStart().TrimEnd()).ToArray();
@@ -227,7 +227,6 @@ namespace mp3TaggerMusic
                     tagFile.Save();
                     tagFile.Dispose();
                     streamR.Dispose();
-                    //}
 
                     //AQUI SETIAR UN VARIABLE PARA DECIR QUE REFRESQUE EL LISTVIEW
                     App.Global_refreshListSong = true;
